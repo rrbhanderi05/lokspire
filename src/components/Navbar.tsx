@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, MapPin, Phone } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Navbar = () => {
@@ -17,42 +17,53 @@ const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white shadow-lg sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-md shadow-lg sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
+        <div className="flex justify-between h-16 md:h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2">
-              <MapPin className="h-8 w-8 text-[#007acc]" />
-              <span className="text-xl font-bold text-[#005f73]">📍 Lokspire</span>
+            <Link to="/" className="flex items-center space-x-3">
+              <img 
+                src="/placeholder.svg" 
+                alt="Lokspire Logo" 
+                className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-md"
+              />
+              <div className="flex flex-col">
+                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent">
+                  Lokspire
+                </span>
+                <span className="text-xs text-gray-500 hidden md:block">
+                  Connect. Discover. Grow.
+                </span>
+              </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 ${
                   location.pathname === item.path
-                    ? 'text-[#007acc] bg-blue-50'
+                    ? 'text-[#007acc] bg-gradient-to-r from-blue-50 to-teal-50 shadow-sm'
                     : 'text-gray-700 hover:text-[#007acc] hover:bg-gray-50'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
-            <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc]">
+            <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl">
               <Phone className="w-4 h-4 mr-2" />
               Contact
             </Button>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-[#007acc] focus:outline-none"
+              className="text-gray-700 hover:text-[#007acc] focus:outline-none p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -61,22 +72,28 @@ const Navbar = () => {
 
         {/* Mobile Navigation */}
         {isOpen && (
-          <div className="md:hidden bg-white border-t">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-gray-100 absolute left-0 right-0 shadow-lg">
+            <div className="px-4 pt-2 pb-4 space-y-1">
               {navItems.map((item) => (
                 <Link
                   key={item.name}
                   to={item.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  className={`block px-4 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
                     location.pathname === item.path
-                      ? 'text-[#007acc] bg-blue-50'
+                      ? 'text-[#007acc] bg-gradient-to-r from-blue-50 to-teal-50'
                       : 'text-gray-700 hover:text-[#007acc] hover:bg-gray-50'
                   }`}
                 >
                   {item.name}
                 </Link>
               ))}
+              <div className="pt-2">
+                <Button className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg rounded-xl">
+                  <Phone className="w-4 h-4 mr-2" />
+                  Contact
+                </Button>
+              </div>
             </div>
           </div>
         )}

@@ -46,6 +46,7 @@ const PostListing = () => {
     description: '',
     category: '',
     location: '',
+    mobile: '',
     whatsapp: '',
     images: [] as File[]
   });
@@ -74,14 +75,14 @@ const PostListing = () => {
     }));
   };
 
-  const removeImage = (index) => {
+  const removeImage = (index: number) => {
     setFormData(prev => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index)
     }));
   };
 
-  const handleDrag = (e) => {
+  const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
@@ -91,7 +92,7 @@ const PostListing = () => {
     }
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -101,48 +102,45 @@ const PostListing = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Here you would typically send the data to your backend
     alert('Listing submitted successfully! We will review and publish it soon.');
     
-    // Reset form
     setFormData({
       title: '',
       description: '',
       category: '',
       location: '',
+      mobile: '',
       whatsapp: '',
       images: []
     });
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Navbar />
       
-      <div className="py-12 px-4">
+      <div className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#005f73] mb-4">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl md:text-4xl font-bold text-[#005f73] mb-4">
               Post Your Business Listing
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto">
               Share your home-based business with the Amreli community
             </p>
           </div>
 
-          <Card className="shadow-xl">
-            <CardHeader className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white">
-              <CardTitle className="text-2xl">Business Information</CardTitle>
+          <Card className="shadow-2xl border-0 bg-white/80 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white rounded-t-lg">
+              <CardTitle className="text-xl md:text-2xl">Business Information</CardTitle>
             </CardHeader>
-            <CardContent className="p-8">
+            <CardContent className="p-4 md:p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Business Title */}
                 <div>
-                  <Label htmlFor="title" className="text-base font-semibold text-[#005f73]">
+                  <Label htmlFor="title" className="text-sm md:text-base font-semibold text-[#005f73]">
                     Business Title *
                   </Label>
                   <Input
@@ -150,38 +148,36 @@ const PostListing = () => {
                     value={formData.title}
                     onChange={(e) => handleInputChange('title', e.target.value)}
                     placeholder="e.g., Priya's Handmade Jewelry"
-                    className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                    className="mt-2 h-10 md:h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
                     required
                   />
                 </div>
 
-                {/* Description */}
                 <div>
-                  <Label htmlFor="description" className="text-base font-semibold text-[#005f73]">
+                  <Label htmlFor="description" className="text-sm md:text-base font-semibold text-[#005f73]">
                     Description *
                   </Label>
                   <Textarea
                     id="description"
                     value={formData.description}
                     onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Describe your products or services... (Max 200 words)"
-                    className="mt-2 min-h-32 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
-                    maxLength={1000}
+                    placeholder="Describe your products or services... (Max 200 characters)"
+                    className="mt-2 min-h-24 md:min-h-32 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                    maxLength={200}
                     required
                   />
                   <p className="text-sm text-gray-500 mt-1">
-                    {formData.description.length}/1000 characters
+                    {formData.description.length}/200 characters
                   </p>
                 </div>
 
-                {/* Category and Location Row */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                   <div>
-                    <Label htmlFor="category" className="text-base font-semibold text-[#005f73]">
+                    <Label htmlFor="category" className="text-sm md:text-base font-semibold text-[#005f73]">
                       Category *
                     </Label>
                     <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
-                      <SelectTrigger className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                      <SelectTrigger className="mt-2 h-10 md:h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
                         <SelectValue placeholder="Select your business category" />
                       </SelectTrigger>
                       <SelectContent>
@@ -195,11 +191,11 @@ const PostListing = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="location" className="text-base font-semibold text-[#005f73]">
+                    <Label htmlFor="location" className="text-sm md:text-base font-semibold text-[#005f73]">
                       Location / Area *
                     </Label>
                     <Select value={formData.location} onValueChange={(value) => handleInputChange('location', value)}>
-                      <SelectTrigger className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                      <SelectTrigger className="mt-2 h-10 md:h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
                         <SelectValue placeholder="Select your area in Amreli" />
                       </SelectTrigger>
                       <SelectContent>
@@ -213,19 +209,18 @@ const PostListing = () => {
                   </div>
                 </div>
 
-                {/* WhatsApp Number */}
                 <div>
-                  <Label htmlFor="whatsapp" className="text-base font-semibold text-[#005f73]">
-                    WhatsApp Number *
+                  <Label htmlFor="mobile" className="text-sm md:text-base font-semibold text-[#005f73]">
+                    Mobile Number *
                   </Label>
                   <div className="relative mt-2">
                     <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
-                      id="whatsapp"
-                      value={formData.whatsapp}
-                      onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                      id="mobile"
+                      value={formData.mobile}
+                      onChange={(e) => handleInputChange('mobile', e.target.value)}
                       placeholder="9876543210"
-                      className="pl-10 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                      className="pl-10 h-10 md:h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
                       pattern="[0-9]{10}"
                       title="Please enter a valid 10-digit mobile number"
                       required
@@ -236,18 +231,37 @@ const PostListing = () => {
                   </p>
                 </div>
 
-                {/* Image Upload */}
                 <div>
-                  <Label className="text-base font-semibold text-[#005f73]">
+                  <Label htmlFor="whatsapp" className="text-sm md:text-base font-semibold text-[#005f73]">
+                    WhatsApp Number (Optional)
+                  </Label>
+                  <div className="relative mt-2">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <Input
+                      id="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={(e) => handleInputChange('whatsapp', e.target.value)}
+                      placeholder="9876543210"
+                      className="pl-10 h-10 md:h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                      pattern="[0-9]{10}"
+                      title="Please enter a valid 10-digit mobile number"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Enter 10-digit number without +91 (Leave empty to use mobile number)
+                  </p>
+                </div>
+
+                <div>
+                  <Label className="text-sm md:text-base font-semibold text-[#005f73]">
                     Upload Images (Optional)
                   </Label>
                   <p className="text-sm text-gray-500 mb-3">
                     Upload up to 3 images (JPG/PNG, max 800KB each)
                   </p>
                   
-                  {/* Upload Area */}
                   <div
-                    className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+                    className={`border-2 border-dashed rounded-xl p-4 md:p-6 text-center transition-colors ${
                       dragActive 
                         ? 'border-[#007acc] bg-blue-50' 
                         : 'border-gray-300 hover:border-[#007acc]'
@@ -257,8 +271,8 @@ const PostListing = () => {
                     onDragOver={handleDrag}
                     onDrop={handleDrop}
                   >
-                    <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600 mb-2">
+                    <Camera className="w-8 md:w-12 h-8 md:h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-2 text-sm md:text-base">
                       Drag and drop images here, or click to select
                     </p>
                     <input
@@ -272,15 +286,14 @@ const PostListing = () => {
                     <Button
                       type="button"
                       variant="outline"
-                      onClick={() => document.getElementById('image-upload').click()}
-                      className="border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white"
+                      onClick={() => document.getElementById('image-upload')?.click()}
+                      className="border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white text-sm md:text-base"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       Select Images
                     </Button>
                   </div>
 
-                  {/* Image Preview */}
                   {formData.images.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                       {formData.images.map((image, index) => (
@@ -288,7 +301,7 @@ const PostListing = () => {
                           <img
                             src={URL.createObjectURL(image)}
                             alt={`Preview ${index + 1}`}
-                            className="w-full h-32 object-cover rounded-lg border"
+                            className="w-full h-24 md:h-32 object-cover rounded-lg border"
                           />
                           <Button
                             type="button"
@@ -305,11 +318,10 @@ const PostListing = () => {
                   )}
                 </div>
 
-                {/* Submit Button */}
-                <div className="pt-6">
+                <div className="pt-4 md:pt-6">
                   <Button
                     type="submit"
-                    className="w-full h-14 bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white text-lg font-semibold rounded-xl"
+                    className="w-full h-12 md:h-14 bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white text-base md:text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     Post My Listing
                   </Button>
