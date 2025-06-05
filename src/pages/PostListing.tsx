@@ -1,292 +1,320 @@
+
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Upload, Phone, MapPin, Camera } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { Upload, X, Phone, MapPin, Camera } from 'lucide-react';
+
+const categories = [
+  'Clothes & Fashion',
+  'Imitation Jewelry',
+  'Homemade Snacks & Sweets',
+  'Tiffin / Dabba Services',
+  'Beauty & Skincare Products',
+  'Handicrafts & Decorative Items',
+  'Gift & Handmade Items',
+  'Stationery / Printed Items',
+  'Stitching / Tailoring',
+  'Baby Care Products',
+  'Jobs'
+];
+
+const areas = [
+  'Bhojal Para',
+  'Jesingpara',
+  'Sankul',
+  'Chakkargadh Road Area',
+  'Sukhnath Para',
+  'Hanumanpara',
+  'Lathi Road Area',
+  'Rajmahel Road Area',
+  'Tower Area',
+  'Mukti Dham Area',
+  'Kanyashala Road Area',
+  'GIDC Residential Area',
+  "Dr. Ghanshyam Dhanani's Area"
+];
 
 const PostListing = () => {
   const [formData, setFormData] = useState({
-    businessTitle: '',
+    title: '',
     description: '',
     category: '',
     location: '',
-    whatsappNumber: '',
-    contactNumber: '',
-    images: [] as File[]
+    whatsapp: '',
+    images: []
   });
 
-  const { toast } = useToast();
+  const [dragActive, setDragActive] = useState(false);
 
-  const categories = [
-    'Clothes & Fashion',
-    'Imitation Jewelry',
-    'Homemade Snacks & Sweets',
-    'Tiffin / Dabba Services',
-    'Beauty & Skincare Products',
-    'Handicrafts & Decorative Items',
-    'Gift & Handmade Items',
-    'Stationery / Printed Items',
-    'Stitching / Tailoring',
-    'Baby Care Products',
-    'Jobs'
-  ];
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const validFiles = files.filter(file => {
-      const isValidType = file.type === 'image/jpeg' || file.type === 'image/png';
-      const isValidSize = file.size <= 800 * 1024;
-      return isValidType && isValidSize;
-    });
-
-    if (validFiles.length !== files.length) {
-      toast({
-        title: "Invalid files detected",
-        description: "Please upload only JPG/PNG files under 800KB",
-        variant: "destructive"
-      });
-    }
-
-    if (formData.images.length + validFiles.length > 3) {
-      toast({
-        title: "Too many images",
-        description: "You can upload maximum 3 images",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const handleInputChange = (field, value) => {
     setFormData(prev => ({
       ...prev,
-      images: [...prev.images, ...validFiles]
+      [field]: value
     }));
   };
 
-  const removeImage = (index: number) => {
+  const handleImageUpload = (files) => {
+    const newImages = Array.from(files).slice(0, 3 - formData.images.length);
+    const validImages = newImages.filter(file => {
+      const isValid = file.type.startsWith('image/') && file.size <= 800 * 1024;
+      return isValid;
+    });
+
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, ...validImages]
+    }));
+  };
+
+  const removeImage = (index) => {
     setFormData(prev => ({
       ...prev,
       images: prev.images.filter((_, i) => i !== index)
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleDrag = (e) => {
     e.preventDefault();
-    
-    if (!formData.businessTitle || !formData.description || !formData.category || !formData.location) {
-      toast({
-        title: "Please fill required fields",
-        description: "Business title, description, category, and location are required",
-        variant: "destructive"
-      });
-      return;
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
     }
+  };
 
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      handleImageUpload(e.dataTransfer.files);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     console.log('Form submitted:', formData);
-    toast({
-      title: "Listing submitted successfully! 🎉",
-      description: "Your business listing will be reviewed and published soon.",
-    });
-
+    // Here you would typically send the data to your backend
+    alert('Listing submitted successfully! We will review and publish it soon.');
+    
+    // Reset form
     setFormData({
-      businessTitle: '',
+      title: '',
       description: '',
       category: '',
       location: '',
-      whatsappNumber: '',
-      contactNumber: '',
+      whatsapp: '',
       images: []
     });
   };
-
-  const wordCount = formData.description.split(' ').filter(word => word.length > 0).length;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Navbar />
       
       <div className="py-12 px-4">
-        <div className="max-w-2xl mx-auto">
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-[#005f73] mb-2">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#005f73] mb-4">
               Post Your Business Listing
             </h1>
-            <p className="text-lg text-gray-600">
-              Reach local customers and grow your business in Amreli
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Share your home-based business with the Amreli community
             </p>
           </div>
 
-          <Card className="shadow-xl border-0 bg-white">
-            <CardHeader className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white rounded-t-lg">
-              <CardTitle className="text-xl font-semibold text-center">
-                Create Your Business Listing
-              </CardTitle>
+          <Card className="shadow-xl">
+            <CardHeader className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white">
+              <CardTitle className="text-2xl">Business Information</CardTitle>
             </CardHeader>
-            
-            <CardContent className="p-6 space-y-6">
+            <CardContent className="p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
-                
-                <div className="space-y-2">
-                  <Label htmlFor="businessTitle" className="text-[#005f73] font-medium">
+                {/* Business Title */}
+                <div>
+                  <Label htmlFor="title" className="text-base font-semibold text-[#005f73]">
                     Business Title *
                   </Label>
                   <Input
-                    id="businessTitle"
-                    placeholder="e.g., Handmade Jewelry by Priya"
-                    value={formData.businessTitle}
-                    onChange={(e) => setFormData(prev => ({ ...prev, businessTitle: e.target.value }))}
-                    className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] h-12"
+                    id="title"
+                    value={formData.title}
+                    onChange={(e) => handleInputChange('title', e.target.value)}
+                    placeholder="e.g., Priya's Handmade Jewelry"
+                    className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                    required
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="description" className="text-[#005f73] font-medium">
-                    Description * 
-                    <span className="text-sm text-gray-500 ml-2">
-                      ({wordCount}/200 words)
-                    </span>
+                {/* Description */}
+                <div>
+                  <Label htmlFor="description" className="text-base font-semibold text-[#005f73]">
+                    Description *
                   </Label>
                   <Textarea
                     id="description"
-                    placeholder="Describe your products or services, quality, pricing, etc..."
                     value={formData.description}
-                    onChange={(e) => {
-                      const words = e.target.value.split(' ').filter(word => word.length > 0);
-                      if (words.length <= 200) {
-                        setFormData(prev => ({ ...prev, description: e.target.value }));
-                      }
-                    }}
-                    className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] min-h-24 resize-none"
-                    rows={4}
+                    onChange={(e) => handleInputChange('description', e.target.value)}
+                    placeholder="Describe your products or services... (Max 200 words)"
+                    className="mt-2 min-h-32 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                    maxLength={1000}
+                    required
                   />
+                  <p className="text-sm text-gray-500 mt-1">
+                    {formData.description.length}/1000 characters
+                  </p>
                 </div>
 
-                <div className="space-y-2">
-                  <Label className="text-[#005f73] font-medium">
-                    Category *
-                  </Label>
-                  <Select value={formData.category} onValueChange={(value) => setFormData(prev => ({ ...prev, category: value }))}>
-                    <SelectTrigger className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] h-12">
-                      <SelectValue placeholder="Select your business category" />
-                    </SelectTrigger>
-                    <SelectContent className="rounded-xl bg-white border-gray-200 shadow-lg">
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category} className="hover:bg-[#007acc]/10">
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="location" className="text-[#005f73] font-medium">
-                    <MapPin className="inline w-4 h-4 mr-1" />
-                    Location *
-                  </Label>
-                  <Input
-                    id="location"
-                    placeholder="e.g., Lathi Road, Amreli"
-                    value={formData.location}
-                    onChange={(e) => setFormData(prev => ({ ...prev, location: e.target.value }))}
-                    className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] h-12"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="whatsapp" className="text-[#005f73] font-medium">
-                      <Phone className="inline w-4 h-4 mr-1" />
-                      WhatsApp Number
+                {/* Category and Location Row */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <Label htmlFor="category" className="text-base font-semibold text-[#005f73]">
+                      Category *
                     </Label>
+                    <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+                      <SelectTrigger className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                        <SelectValue placeholder="Select your business category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="location" className="text-base font-semibold text-[#005f73]">
+                      Location / Area *
+                    </Label>
+                    <Select value={formData.location} onValueChange={(value) => handleInputChange('location', value)}>
+                      <SelectTrigger className="mt-2 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                        <SelectValue placeholder="Select your area in Amreli" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {areas.map((area) => (
+                          <SelectItem key={area} value={area}>
+                            {area}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* WhatsApp Number */}
+                <div>
+                  <Label htmlFor="whatsapp" className="text-base font-semibold text-[#005f73]">
+                    WhatsApp Number *
+                  </Label>
+                  <div className="relative mt-2">
+                    <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                     <Input
                       id="whatsapp"
+                      value={formData.whatsapp}
+                      onChange={(e) => handleInputChange('whatsapp', e.target.value)}
                       placeholder="9876543210"
-                      value={formData.whatsappNumber}
-                      onChange={(e) => setFormData(prev => ({ ...prev, whatsappNumber: e.target.value }))}
-                      className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] h-12"
+                      className="pl-10 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                      pattern="[0-9]{10}"
+                      title="Please enter a valid 10-digit mobile number"
+                      required
                     />
                   </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="contact" className="text-[#005f73] font-medium">
-                      Contact Number
-                    </Label>
-                    <Input
-                      id="contact"
-                      placeholder="9876543210"
-                      value={formData.contactNumber}
-                      onChange={(e) => setFormData(prev => ({ ...prev, contactNumber: e.target.value }))}
-                      className="rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc] h-12"
-                    />
-                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Enter 10-digit number without +91
+                  </p>
                 </div>
 
-                <div className="space-y-3">
-                  <Label className="text-[#005f73] font-medium">
-                    <Camera className="inline w-4 h-4 mr-1" />
-                    Upload Images (Optional - Max 3, under 800KB each)
+                {/* Image Upload */}
+                <div>
+                  <Label className="text-base font-semibold text-[#005f73]">
+                    Upload Images (Optional)
                   </Label>
+                  <p className="text-sm text-gray-500 mb-3">
+                    Upload up to 3 images (JPG/PNG, max 800KB each)
+                  </p>
                   
-                  {formData.images.length < 3 && (
-                    <div className="border-2 border-dashed border-[#00bfa6] rounded-xl p-6 text-center hover:border-[#007acc] transition-colors">
-                      <input
-                        type="file"
-                        multiple
-                        accept="image/jpeg,image/png"
-                        onChange={handleImageUpload}
-                        className="hidden"
-                        id="imageUpload"
-                      />
-                      <label htmlFor="imageUpload" className="cursor-pointer">
-                        <Upload className="w-8 h-8 mx-auto text-[#00bfa6] mb-2" />
-                        <p className="text-sm text-gray-600">
-                          Click to upload product images
-                        </p>
-                        <p className="text-xs text-gray-500 mt-1">
-                          JPG, PNG (max 800KB each)
-                        </p>
-                      </label>
-                    </div>
-                  )}
+                  {/* Upload Area */}
+                  <div
+                    className={`border-2 border-dashed rounded-xl p-6 text-center transition-colors ${
+                      dragActive 
+                        ? 'border-[#007acc] bg-blue-50' 
+                        : 'border-gray-300 hover:border-[#007acc]'
+                    }`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                  >
+                    <Camera className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-600 mb-2">
+                      Drag and drop images here, or click to select
+                    </p>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e.target.files)}
+                      className="hidden"
+                      id="image-upload"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => document.getElementById('image-upload').click()}
+                      className="border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white"
+                    >
+                      <Upload className="w-4 h-4 mr-2" />
+                      Select Images
+                    </Button>
+                  </div>
 
+                  {/* Image Preview */}
                   {formData.images.length > 0 && (
-                    <div className="grid grid-cols-3 gap-3">
-                      {formData.images.map((file, index) => (
-                        <div key={index} className="relative group">
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+                      {formData.images.map((image, index) => (
+                        <div key={index} className="relative">
                           <img
-                            src={URL.createObjectURL(file)}
+                            src={URL.createObjectURL(image)}
                             alt={`Preview ${index + 1}`}
-                            className="w-full h-20 object-cover rounded-lg border-2 border-gray-200"
+                            className="w-full h-32 object-cover rounded-lg border"
                           />
-                          <button
+                          <Button
                             type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2 w-6 h-6"
                             onClick={() => removeImage(index)}
-                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-xs hover:bg-red-600 transition-colors"
                           >
-                            ×
-                          </button>
+                            <X className="w-3 h-3" />
+                          </Button>
                         </div>
                       ))}
                     </div>
                   )}
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white font-semibold py-6 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]"
-                >
-                  🚀 Post My Listing
-                </Button>
-
-                <p className="text-xs text-center text-gray-500 mt-4">
-                  By posting, you agree to our terms of service. Your listing will be reviewed before going live.
-                </p>
+                {/* Submit Button */}
+                <div className="pt-6">
+                  <Button
+                    type="submit"
+                    className="w-full h-14 bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white text-lg font-semibold rounded-xl"
+                  >
+                    Post My Listing
+                  </Button>
+                  <p className="text-sm text-gray-500 text-center mt-3">
+                    Your listing will be reviewed and published within 24 hours
+                  </p>
+                </div>
               </form>
             </CardContent>
           </Card>

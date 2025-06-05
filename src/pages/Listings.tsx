@@ -13,7 +13,7 @@ const sampleBusinesses = [
     id: 1,
     title: "Priya's Handmade Jewelry",
     category: "Imitation Jewelry",
-    location: "Lathi Road, Amreli",
+    location: "Lathi Road Area",
     description: "Beautiful handcrafted jewelry with traditional designs. Custom orders available.",
     rating: 4.8,
     image: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=300&h=200&fit=crop",
@@ -23,7 +23,7 @@ const sampleBusinesses = [
     id: 2,
     title: "Ravi's Tiffin Service",
     category: "Tiffin / Dabba Services",
-    location: "Station Road, Amreli",
+    location: "Bhojal Para",
     description: "Fresh, homemade meals delivered daily. Gujarati thali and North Indian options.",
     rating: 4.9,
     image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=300&h=200&fit=crop",
@@ -33,7 +33,7 @@ const sampleBusinesses = [
     id: 3,
     title: "Meera's Boutique",
     category: "Clothes & Fashion",
-    location: "Rajkot Road, Amreli",
+    location: "Rajmahel Road Area",
     description: "Custom stitching and designer clothes for women. Traditional and modern wear.",
     rating: 4.7,
     image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300&h=200&fit=crop",
@@ -43,7 +43,7 @@ const sampleBusinesses = [
     id: 4,
     title: "Sweet Dreams Bakery",
     category: "Homemade Snacks & Sweets",
-    location: "Nani Bazar, Amreli",
+    location: "Jesingpara",
     description: "Freshly baked cakes, pastries and traditional sweets. Order for special occasions.",
     rating: 4.6,
     image: "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=300&h=200&fit=crop",
@@ -53,7 +53,7 @@ const sampleBusinesses = [
     id: 5,
     title: "Natural Glow Skincare",
     category: "Beauty & Skincare Products",
-    location: "College Road, Amreli",
+    location: "Tower Area",
     description: "Organic and natural skincare products made with herbal ingredients.",
     rating: 4.5,
     image: "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=300&h=200&fit=crop",
@@ -63,7 +63,7 @@ const sampleBusinesses = [
     id: 6,
     title: "Craftsman's Corner",
     category: "Handicrafts & Decorative Items",
-    location: "Bhavnagar Road, Amreli",
+    location: "GIDC Residential Area",
     description: "Unique handicrafts and home decor items. Perfect for gifting and decorating.",
     rating: 4.4,
     image: "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=300&h=200&fit=crop",
@@ -86,9 +86,27 @@ const categories = [
   'Jobs'
 ];
 
+const areas = [
+  'All Areas',
+  'Bhojal Para',
+  'Jesingpara',
+  'Sankul',
+  'Chakkargadh Road Area',
+  'Sukhnath Para',
+  'Hanumanpara',
+  'Lathi Road Area',
+  'Rajmahel Road Area',
+  'Tower Area',
+  'Mukti Dham Area',
+  'Kanyashala Road Area',
+  'GIDC Residential Area',
+  "Dr. Ghanshyam Dhanani's Area"
+];
+
 const Listings = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
+  const [selectedArea, setSelectedArea] = useState('All Areas');
   const [filteredBusinesses, setFilteredBusinesses] = useState(sampleBusinesses);
 
   React.useEffect(() => {
@@ -96,6 +114,10 @@ const Listings = () => {
 
     if (selectedCategory !== 'All Categories') {
       filtered = filtered.filter(business => business.category === selectedCategory);
+    }
+
+    if (selectedArea !== 'All Areas') {
+      filtered = filtered.filter(business => business.location === selectedArea);
     }
 
     if (searchTerm) {
@@ -107,7 +129,7 @@ const Listings = () => {
     }
 
     setFilteredBusinesses(filtered);
-  }, [searchTerm, selectedCategory]);
+  }, [searchTerm, selectedCategory, selectedArea]);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,7 +149,7 @@ const Listings = () => {
 
           {/* Search and Filter */}
           <div className="mb-8 bg-white p-6 rounded-xl shadow-lg">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
@@ -149,6 +171,18 @@ const Listings = () => {
                   ))}
                 </SelectContent>
               </Select>
+              <Select value={selectedArea} onValueChange={setSelectedArea}>
+                <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                  <SelectValue placeholder="Select area" />
+                </SelectTrigger>
+                <SelectContent>
+                  {areas.map((area) => (
+                    <SelectItem key={area} value={area}>
+                      {area}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -157,6 +191,7 @@ const Listings = () => {
             <p className="text-gray-600">
               Showing {filteredBusinesses.length} businesses
               {selectedCategory !== 'All Categories' && ` in ${selectedCategory}`}
+              {selectedArea !== 'All Areas' && ` in ${selectedArea}`}
               {searchTerm && ` matching "${searchTerm}"`}
             </p>
           </div>
@@ -203,7 +238,7 @@ const Listings = () => {
           {filteredBusinesses.length === 0 && (
             <div className="text-center py-12">
               <p className="text-gray-500 text-lg">No businesses found matching your criteria.</p>
-              <p className="text-gray-400 mt-2">Try adjusting your search or category filter.</p>
+              <p className="text-gray-400 mt-2">Try adjusting your search or filter options.</p>
             </div>
           )}
         </div>
