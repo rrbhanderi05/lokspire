@@ -47,21 +47,23 @@ const PostListing = () => {
     category: '',
     location: '',
     whatsapp: '',
-    images: []
+    images: [] as File[]
   });
 
   const [dragActive, setDragActive] = useState(false);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
     }));
   };
 
-  const handleImageUpload = (files) => {
+  const handleImageUpload = (files: FileList | null) => {
+    if (!files) return;
+    
     const newImages = Array.from(files).slice(0, 3 - formData.images.length);
-    const validImages = newImages.filter(file => {
+    const validImages = newImages.filter((file: File) => {
       const isValid = file.type.startsWith('image/') && file.size <= 800 * 1024;
       return isValid;
     });
