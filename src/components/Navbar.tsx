@@ -23,7 +23,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center space-x-3">
               <img 
-                src="/placeholder.svg" 
+                src="https://raw.githubusercontent.com/rrbhanderi05/FileHosting/refs/heads/main/Lokspire.png" 
                 alt="Lokspire Logo" 
                 className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-md"
               />

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -199,39 +200,44 @@ const Listings = () => {
           {/* Business Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBusinesses.map((business) => (
-              <Card key={business.id} className="overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <div className="relative h-48 overflow-hidden">
-                  <img 
-                    src={business.image} 
-                    alt={business.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-4 right-4 bg-white rounded-full px-2 py-1 flex items-center">
-                    <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                    <span className="text-sm font-semibold">{business.rating}</span>
+              <Link key={business.id} to={`/business/${business.id}`} className="group">
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1">
+                  <div className="relative h-48 overflow-hidden">
+                    <img 
+                      src={business.image} 
+                      alt={business.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 right-4 bg-white rounded-full px-2 py-1 flex items-center">
+                      <Star className="w-4 h-4 text-yellow-400 mr-1" />
+                      <span className="text-sm font-semibold">{business.rating}</span>
+                    </div>
                   </div>
-                </div>
-                <CardHeader>
-                  <CardTitle className="text-[#005f73]">{business.title}</CardTitle>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <MapPin className="w-4 h-4 mr-1" />
-                    {business.location}
-                  </div>
-                  <div className="inline-block bg-[#007acc] text-white px-2 py-1 rounded-full text-xs w-fit">
-                    {business.category}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 mb-4 text-sm">{business.description}</p>
-                  <Button 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
-                    onClick={() => window.open(`https://wa.me/91${business.whatsapp}`, '_blank')}
-                  >
-                    <Phone className="w-4 h-4 mr-2" />
-                    Contact on WhatsApp
-                  </Button>
-                </CardContent>
-              </Card>
+                  <CardHeader>
+                    <CardTitle className="text-[#005f73] group-hover:text-[#007acc] transition-colors">{business.title}</CardTitle>
+                    <div className="flex items-center text-sm text-gray-600">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      {business.location}
+                    </div>
+                    <div className="inline-block bg-[#007acc] text-white px-2 py-1 rounded-full text-xs w-fit">
+                      {business.category}
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4 text-sm">{business.description}</p>
+                    <Button 
+                      className="w-full bg-green-600 hover:bg-green-700 text-white"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.open(`https://wa.me/91${business.whatsapp}`, '_blank');
+                      }}
+                    >
+                      <Phone className="w-4 h-4 mr-2" />
+                      Contact on WhatsApp
+                    </Button>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
 

@@ -9,6 +9,7 @@ import PostListing from "./pages/PostListing";
 import Listings from "./pages/Listings";
 import Categories from "./pages/Categories";
 import CategoryPage from "./pages/CategoryPage";
+import BusinessPost from "./pages/BusinessPost";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/listings" element={<Listings />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/category/:category" element={<CategoryPage />} />
+          <Route path="/business/:id" element={<BusinessPost />} />
           <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
