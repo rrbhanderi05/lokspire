@@ -10,13 +10,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Description */}
           <div className="md:col-span-1">
-            <div className="flex items-center space-x-3 mb-4">
+            <div className="flex items-center mb-4">
               <img 
-                src="/placeholder.svg" 
-                alt="Lokspire Logo" 
-                className="h-10 w-10 rounded-full shadow-lg"
+                src="https://raw.githubusercontent.com/rrbhanderi05/FileHosting/refs/heads/main/Lokspire.png" 
+                alt="Logo" 
+                className="h-14 object-contain"
               />
-              <span className="text-xl font-bold">Lokspire</span>
             </div>
             <p className="text-gray-300 text-sm mb-6">
               Connecting local home businesses with customers in Amreli. 
@@ -123,7 +122,7 @@ const Footer = () => {
         <div className="border-t border-gray-600 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-300 text-sm text-center md:text-left">
-              © 2024 Lokspire - Supporting Local Businesses in Amreli. All rights reserved.
+              © 2024 - Supporting Local Businesses in Amreli. All rights reserved.
             </p>
             <p className="text-gray-400 text-xs text-center md:text-right">
               Made and Operated by{' '}
