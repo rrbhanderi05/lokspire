@@ -29,7 +29,7 @@ const Navbar = () => {
               <img 
                 src="https://raw.githubusercontent.com/rrbhanderi05/FileHosting/refs/heads/main/Lokspire.png" 
                 alt="Logo" 
-                className="h-12 w-12 md:h-16 md:w-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 object-cover"
+                className="h-12 md:h-16 shadow-lg hover:shadow-xl transition-all duration-300 object-contain"
               />
             </Link>
           </div>
