@@ -58,7 +58,9 @@ const BusinessPost = () => {
         <div className="py-12 px-4 text-center">
           <h1 className="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">Business not found</h1>
           <Link to="/listings">
-            <Button>Back to Listings</Button>
+            <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc]">
+              Back to Listings
+            </Button>
           </Link>
         </div>
         <Footer />
@@ -136,7 +138,7 @@ const BusinessPost = () => {
   const averageRating = comments.reduce((sum, comment) => sum + comment.rating, 0) / comments.length;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
       <Navbar />
       
       <div className="py-8 px-4">
@@ -145,14 +147,14 @@ const BusinessPost = () => {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="mb-6 hover:bg-gray-100 dark:hover:bg-gray-800"
+            className="mb-6 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
 
           {/* Business Header with Image Slider */}
-          <Card className="mb-8 overflow-hidden shadow-xl border-0 bg-white dark:bg-gray-800">
+          <Card className="mb-8 overflow-hidden shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
             <div className="relative">
               <Carousel className="w-full">
                 <CarouselContent>
@@ -164,28 +166,28 @@ const BusinessPost = () => {
                           alt={`${business.title} - Image ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-30" />
+                        <div className="absolute inset-0 bg-black bg-opacity-40" />
                       </div>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-4" />
-                <CarouselNext className="right-4" />
+                <CarouselPrevious className="left-4 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700" />
+                <CarouselNext className="right-4 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700" />
               </Carousel>
               
               <div className="absolute bottom-6 left-6 text-white">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{business.title}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{business.title}</h1>
                 <div className="flex items-center mb-2">
                   <MapPin className="w-5 h-5 mr-2" />
-                  <span className="text-lg">{business.location}</span>
+                  <span className="text-lg drop-shadow-lg">{business.location}</span>
                 </div>
-                <div className="inline-block bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm">
+                <div className="inline-block bg-white/20 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium">
                   {business.category}
                 </div>
               </div>
-              <div className="absolute top-6 right-6 bg-white dark:bg-gray-800 rounded-lg px-3 py-2 flex items-center shadow-lg">
+              <div className="absolute top-6 right-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center shadow-xl">
                 <Star className="w-5 h-5 text-yellow-400 mr-1 fill-current" />
-                <span className="font-semibold text-lg text-gray-900 dark:text-white">{averageRating.toFixed(1)}</span>
+                <span className="font-bold text-lg text-gray-900 dark:text-white">{averageRating.toFixed(1)}</span>
                 <span className="text-gray-600 dark:text-gray-400 ml-1">({comments.length})</span>
               </div>
             </div>
@@ -195,25 +197,25 @@ const BusinessPost = () => {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
-              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">About</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">About</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{business.description}</p>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">{business.description}</p>
                 </CardContent>
               </Card>
 
               {/* Add Review */}
-              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Write a Review</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Write a Review</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {!user ? (
-                    <div className="text-center py-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">Sign in to write a review</p>
-                      <Button onClick={signInWithGoogle} className="bg-[#007acc] hover:bg-[#005f73]">
+                    <div className="text-center py-8 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 rounded-xl">
+                      <p className="text-gray-600 dark:text-gray-300 mb-4">Sign in to write a review</p>
+                      <Button onClick={signInWithGoogle} className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg">
                         Sign in with Google
                       </Button>
                     </div>
@@ -226,10 +228,10 @@ const BusinessPost = () => {
                             <button
                               key={star}
                               onClick={() => setUserRating(star)}
-                              className="focus:outline-none transition-colors"
+                              className="focus:outline-none transition-all duration-200 hover:scale-110"
                             >
                               <Star 
-                                className={`w-6 h-6 ${
+                                className={`w-8 h-8 ${
                                   star <= userRating 
                                     ? 'text-yellow-400 fill-current' 
                                     : 'text-gray-300 dark:text-gray-600'
@@ -245,13 +247,13 @@ const BusinessPost = () => {
                           value={newComment}
                           onChange={(e) => setNewComment(e.target.value)}
                           placeholder="Share your experience..."
-                          className="min-h-[100px] bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+                          className="min-h-[100px] bg-white dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-white"
                         />
                       </div>
                       <Button 
                         onClick={handleAddComment}
                         disabled={!newComment.trim() || userRating === 0}
-                        className="bg-[#007acc] hover:bg-[#005f73]"
+                        className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg"
                       >
                         <Send className="w-4 h-4 mr-2" />
                         Post Review
@@ -262,9 +264,9 @@ const BusinessPost = () => {
               </Card>
 
               {/* Reviews */}
-              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] flex items-center">
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] flex items-center text-xl">
                     <MessageCircle className="w-5 h-5 mr-2" />
                     Reviews ({comments.length})
                   </CardTitle>
@@ -272,41 +274,43 @@ const BusinessPost = () => {
                 <CardContent className="space-y-4">
                   {comments.map((comment) => (
                     <div key={comment.id} className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-3">
                           <img
                             src={comment.userPhoto || `https://ui-avatars.com/api/?name=${comment.user}&background=007acc&color=fff`}
                             alt={comment.user}
-                            className="w-8 h-8 rounded-full"
+                            className="w-10 h-10 rounded-full border-2 border-gray-200 dark:border-gray-600"
                           />
-                          <span className="font-medium text-gray-900 dark:text-white">{comment.user}</span>
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < comment.rating
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-300 dark:text-gray-600'
-                                }`}
-                              />
-                            ))}
+                          <div>
+                            <span className="font-medium text-gray-900 dark:text-white">{comment.user}</span>
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className={`w-4 h-4 ${
+                                    i < comment.rating
+                                      ? 'text-yellow-400 fill-current'
+                                      : 'text-gray-300 dark:text-gray-600'
+                                  }`}
+                                />
+                              ))}
+                            </div>
                           </div>
                         </div>
                         <span className="text-sm text-gray-500 dark:text-gray-400">{comment.date}</span>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300 mb-2">{comment.comment}</p>
+                      <p className="text-gray-700 dark:text-gray-300 mb-3 leading-relaxed">{comment.comment}</p>
                       <div className="flex items-center space-x-4">
                         <button
                           onClick={() => handleLike(comment.id)}
-                          className={`flex items-center space-x-1 transition-colors ${
+                          className={`flex items-center space-x-2 transition-all duration-200 hover:scale-105 ${
                             likedComments.has(comment.id)
                               ? 'text-red-500'
-                              : 'text-gray-500 dark:text-gray-400 hover:text-[#007acc]'
+                              : 'text-gray-500 dark:text-gray-400 hover:text-[#007acc] dark:hover:text-[#00bfa6]'
                           }`}
                         >
                           <Heart className={`w-4 h-4 ${likedComments.has(comment.id) ? 'fill-current' : ''}`} />
-                          <span className="text-sm">{comment.likes}</span>
+                          <span className="text-sm font-medium">{comment.likes}</span>
                         </button>
                       </div>
                     </div>
@@ -318,13 +322,13 @@ const BusinessPost = () => {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Contact Info */}
-              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Contact Information</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Contact Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Button 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={() => window.open(`https://wa.me/91${business.whatsapp}`, '_blank')}
                   >
                     <Phone className="w-4 h-4 mr-2" />
@@ -332,14 +336,14 @@ const BusinessPost = () => {
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white dark:border-[#00bfa6] dark:text-[#00bfa6] dark:hover:bg-[#00bfa6]"
+                    className="w-full border-2 border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white dark:border-[#00bfa6] dark:text-[#00bfa6] dark:hover:bg-[#00bfa6] dark:hover:text-white shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={() => window.open(`tel:+91${business.mobile}`, '_self')}
                   >
                     Call: +91 {business.mobile}
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    className="w-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-lg hover:shadow-xl transition-all duration-300"
                     onClick={() => navigator.share?.({ 
                       title: business.title, 
                       text: business.description,
@@ -353,26 +357,26 @@ const BusinessPost = () => {
               </Card>
 
               {/* Business Stats */}
-              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
+              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Business Stats</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Business Stats</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex justify-between">
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Total Reviews:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{comments.length}</span>
+                    <span className="font-bold text-gray-900 dark:text-white text-lg">{comments.length}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Average Rating:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{averageRating.toFixed(1)}/5</span>
+                    <span className="font-bold text-gray-900 dark:text-white text-lg">{averageRating.toFixed(1)}/5</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Category:</span>
                     <span className="font-semibold text-sm text-gray-900 dark:text-white">{business.category}</span>
                   </div>
                   {business.verified && (
-                    <div className="flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg">
-                      <span className="text-sm font-medium">✓ Verified Business</span>
+                    <div className="flex items-center justify-center bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 text-green-700 dark:text-green-400 px-4 py-3 rounded-xl border border-green-200 dark:border-green-800">
+                      <span className="text-sm font-bold">✓ Verified Business</span>
                     </div>
                   )}
                 </CardContent>

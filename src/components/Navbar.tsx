@@ -25,20 +25,12 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 md:h-20">
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center">
               <img 
                 src="https://raw.githubusercontent.com/rrbhanderi05/FileHosting/refs/heads/main/Lokspire.png" 
-                alt="Lokspire Logo" 
-                className="h-10 w-10 md:h-12 md:w-12 rounded-full shadow-md"
+                alt="Logo" 
+                className="h-12 w-12 md:h-16 md:w-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 object-cover"
               />
-              <div className="flex flex-col">
-                <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent">
-                  Lokspire
-                </span>
-                <span className="text-xs text-gray-500 dark:text-gray-400 hidden md:block">
-                  Connect. Discover. Grow.
-                </span>
-              </div>
             </Link>
           </div>
 
@@ -62,9 +54,9 @@ const Navbar = () => {
               onClick={toggleTheme}
               variant="ghost"
               size="icon"
-              className="rounded-full"
+              className="rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-              {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </Button>
 
             {user ? (
@@ -72,13 +64,13 @@ const Navbar = () => {
                 <img 
                   src={user.photoURL || ''} 
                   alt={user.displayName || 'User'} 
-                  className="w-8 h-8 rounded-full"
+                  className="w-10 h-10 rounded-full border-2 border-white shadow-lg"
                 />
                 <Button
                   onClick={logout}
                   variant="ghost"
                   size="sm"
-                  className="text-gray-600 dark:text-gray-400"
+                  className="text-gray-600 dark:text-gray-400 hover:text-red-500"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
                   Logout
@@ -87,7 +79,7 @@ const Navbar = () => {
             ) : (
               <Button 
                 onClick={signInWithGoogle}
-                className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl"
+                className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl px-6"
               >
                 Sign In
               </Button>

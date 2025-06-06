@@ -3,13 +3,13 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  // User will need to provide their Firebase config
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
+  apiKey: "AIzaSyA_GMkTyMO5C-vver8oMOG83PA2xYW0O8M",
+  authDomain: "nedlo-st.firebaseapp.com",
+  projectId: "nedlo-st",
+  storageBucket: "nedlo-st.firebasestorage.app",
+  messagingSenderId: "518658480638",
+  appId: "1:518658480638:web:f470f8c21b1ea9e5e588af",
+  measurementId: "G-54Z1TG09MP"
 };
 
 const app = initializeApp(firebaseConfig);
