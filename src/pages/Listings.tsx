@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MapPin, Phone, Star, Search } from 'lucide-react';
+import { MapPin, Phone, Star, Search, Filter } from 'lucide-react';
 
 const sampleBusinesses = [
   {
@@ -133,52 +133,52 @@ const Listings = () => {
   }, [searchTerm, selectedCategory, selectedArea]);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <Navbar />
       
-      <div className="py-12 px-4">
+      <div className="py-12 px-4 md:px-6">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#005f73] mb-4">
+            <h1 className="text-3xl md:text-4xl font-bold text-[#005f73] dark:text-[#00bfa6] mb-4">
               Browse Local Businesses
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
               Discover amazing home-based businesses in Amreli
             </p>
           </div>
 
           {/* Search and Filter */}
-          <div className="mb-8 bg-white p-6 rounded-xl shadow-lg">
+          <div className="mb-8 bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg backdrop-blur-sm border border-gray-100 dark:border-gray-700">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5" />
                 <Input
                   placeholder="Search businesses, products, or locations..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]"
+                  className="pl-10 h-12 rounded-xl border-gray-200 dark:border-gray-700 focus:border-[#007acc] dark:focus:border-[#00bfa6] focus:ring-[#007acc] dark:focus:ring-[#00bfa6] bg-white dark:bg-gray-800"
                 />
               </div>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                <SelectTrigger className="h-12 rounded-xl border-gray-200 dark:border-gray-700 focus:border-[#007acc] dark:focus:border-[#00bfa6] focus:ring-[#007acc] dark:focus:ring-[#00bfa6] bg-white dark:bg-gray-800">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
+                    <SelectItem key={category} value={category} className="text-gray-700 dark:text-gray-300">
                       {category}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
               <Select value={selectedArea} onValueChange={setSelectedArea}>
-                <SelectTrigger className="h-12 rounded-xl border-gray-200 focus:border-[#007acc] focus:ring-[#007acc]">
+                <SelectTrigger className="h-12 rounded-xl border-gray-200 dark:border-gray-700 focus:border-[#007acc] dark:focus:border-[#00bfa6] focus:ring-[#007acc] dark:focus:ring-[#00bfa6] bg-white dark:bg-gray-800">
                   <SelectValue placeholder="Select area" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   {areas.map((area) => (
-                    <SelectItem key={area} value={area}>
+                    <SelectItem key={area} value={area} className="text-gray-700 dark:text-gray-300">
                       {area}
                     </SelectItem>
                   ))}
@@ -189,7 +189,7 @@ const Listings = () => {
 
           {/* Results */}
           <div className="mb-6">
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Showing {filteredBusinesses.length} businesses
               {selectedCategory !== 'All Categories' && ` in ${selectedCategory}`}
               {selectedArea !== 'All Areas' && ` in ${selectedArea}`}
@@ -201,32 +201,33 @@ const Listings = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredBusinesses.map((business) => (
               <Link key={business.id} to={`/business/${business.id}`} className="group">
-                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 group-hover:-translate-y-1">
+                <Card className="overflow-hidden hover:shadow-xl transition-all duration-300 h-full group-hover:-translate-y-1 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                   <div className="relative h-48 overflow-hidden">
                     <img 
                       src={business.image} 
                       alt={business.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                     />
-                    <div className="absolute top-4 right-4 bg-white rounded-full px-2 py-1 flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 mr-1" />
-                      <span className="text-sm font-semibold">{business.rating}</span>
+                    <div className="absolute top-4 right-4 bg-white dark:bg-gray-800 rounded-full px-3 py-1 flex items-center shadow-lg backdrop-blur-sm">
+                      <Star className="w-4 h-4 text-yellow-400 mr-1" fill="currentColor" />
+                      <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{business.rating}</span>
                     </div>
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent h-16"></div>
                   </div>
-                  <CardHeader>
-                    <CardTitle className="text-[#005f73] group-hover:text-[#007acc] transition-colors">{business.title}</CardTitle>
-                    <div className="flex items-center text-sm text-gray-600">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-[#005f73] dark:text-[#00bfa6] group-hover:text-[#007acc] dark:group-hover:text-[#00e6cb] transition-colors">{business.title}</CardTitle>
+                    <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
                       <MapPin className="w-4 h-4 mr-1" />
                       {business.location}
                     </div>
-                    <div className="inline-block bg-[#007acc] text-white px-2 py-1 rounded-full text-xs w-fit">
+                    <div className="inline-block bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white px-3 py-1 rounded-full text-xs font-medium">
                       {business.category}
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-600 mb-4 text-sm">{business.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm line-clamp-2">{business.description}</p>
                     <Button 
-                      className="w-full bg-green-600 hover:bg-green-700 text-white"
+                      className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-600 dark:hover:bg-green-700 text-white shadow-lg transition-all duration-300"
                       onClick={(e) => {
                         e.preventDefault();
                         window.open(`https://wa.me/91${business.whatsapp}`, '_blank');
@@ -242,9 +243,10 @@ const Listings = () => {
           </div>
 
           {filteredBusinesses.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">No businesses found matching your criteria.</p>
-              <p className="text-gray-400 mt-2">Try adjusting your search or filter options.</p>
+            <div className="text-center py-16 px-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700">
+              <Filter className="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" />
+              <p className="text-gray-600 dark:text-gray-300 text-lg font-medium">No businesses found matching your criteria.</p>
+              <p className="text-gray-400 dark:text-gray-500 mt-2">Try adjusting your search or filter options.</p>
             </div>
           )}
         </div>
