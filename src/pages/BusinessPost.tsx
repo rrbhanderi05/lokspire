@@ -6,18 +6,24 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, MapPin, Phone, Star, Send, ThumbsUp, MessageCircle, Share2 } from 'lucide-react';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { ArrowLeft, MapPin, Phone, Star, Send, ThumbsUp, MessageCircle, Share2, Heart } from 'lucide-react';
 import { featuredBusinesses } from '@/data/businessData';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from '@/hooks/use-toast';
 
 const BusinessPost = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { user, signInWithGoogle } = useAuth();
   const [newComment, setNewComment] = useState('');
   const [userRating, setUserRating] = useState(0);
+  const [likedComments, setLikedComments] = useState<Set<number>>(new Set());
   const [comments, setComments] = useState([
     {
       id: 1,
       user: "Anjali Patel",
+      userPhoto: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150",
       rating: 5,
       comment: "Amazing service! Highly recommended. The quality is excellent and delivery was on time.",
       date: "2024-01-15",
@@ -25,7 +31,8 @@ const BusinessPost = () => {
     },
     {
       id: 2,
-      user: "Raj Shah",
+      user: "Raj Shah", 
+      userPhoto: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
       rating: 4,
       comment: "Good quality products. Will order again soon. Customer service is also very responsive.",
       date: "2024-01-10",
@@ -34,6 +41,7 @@ const BusinessPost = () => {
     {
       id: 3,
       user: "Priya Mehta",
+      userPhoto: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150",
       rating: 5,
       comment: "Excellent work! Very professional and timely delivery. Exceeded my expectations.",
       date: "2024-01-08",
@@ -45,10 +53,10 @@ const BusinessPost = () => {
 
   if (!business) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <Navbar />
         <div className="py-12 px-4 text-center">
-          <h1 className="text-2xl font-bold text-gray-600 mb-4">Business not found</h1>
+          <h1 className="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">Business not found</h1>
           <Link to="/listings">
             <Button>Back to Listings</Button>
           </Link>
@@ -58,11 +66,27 @@ const BusinessPost = () => {
     );
   }
 
+  const businessImages = [
+    business.image,
+    "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800",
+    "https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800"
+  ];
+
   const handleAddComment = () => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to post a comment.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (newComment.trim() && userRating > 0) {
       const comment = {
         id: comments.length + 1,
-        user: "You",
+        user: user.displayName || "User",
+        userPhoto: user.photoURL || "",
         rating: userRating,
         comment: newComment,
         date: new Date().toISOString().split('T')[0],
@@ -71,21 +95,48 @@ const BusinessPost = () => {
       setComments([comment, ...comments]);
       setNewComment('');
       setUserRating(0);
+      toast({
+        title: "Comment posted!",
+        description: "Your review has been added successfully."
+      });
     }
   };
 
   const handleLike = (commentId: number) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to like comments.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (likedComments.has(commentId)) {
+      toast({
+        title: "Already liked",
+        description: "You can only like a comment once.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setComments(comments.map(comment => 
       comment.id === commentId 
         ? { ...comment, likes: comment.likes + 1 }
         : comment
     ));
+    setLikedComments(prev => new Set(prev).add(commentId));
+    toast({
+      title: "Liked!",
+      description: "You liked this comment."
+    });
   };
 
   const averageRating = comments.reduce((sum, comment) => sum + comment.rating, 0) / comments.length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <Navbar />
       
       <div className="py-8 px-4">
@@ -94,21 +145,34 @@ const BusinessPost = () => {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="mb-6 hover:bg-gray-100"
+            className="mb-6 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
 
-          {/* Business Header */}
-          <Card className="mb-8 overflow-hidden shadow-lg">
-            <div className="relative h-64 md:h-80">
-              <img 
-                src={business.image} 
-                alt={business.title}
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-30" />
+          {/* Business Header with Image Slider */}
+          <Card className="mb-8 overflow-hidden shadow-xl border-0 bg-white dark:bg-gray-800">
+            <div className="relative">
+              <Carousel className="w-full">
+                <CarouselContent>
+                  {businessImages.map((image, index) => (
+                    <CarouselItem key={index}>
+                      <div className="relative h-64 md:h-80">
+                        <img 
+                          src={image} 
+                          alt={`${business.title} - Image ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black bg-opacity-30" />
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="left-4" />
+                <CarouselNext className="right-4" />
+              </Carousel>
+              
               <div className="absolute bottom-6 left-6 text-white">
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">{business.title}</h1>
                 <div className="flex items-center mb-2">
@@ -119,10 +183,10 @@ const BusinessPost = () => {
                   {business.category}
                 </div>
               </div>
-              <div className="absolute top-6 right-6 bg-white rounded-lg px-3 py-2 flex items-center shadow-lg">
+              <div className="absolute top-6 right-6 bg-white dark:bg-gray-800 rounded-lg px-3 py-2 flex items-center shadow-lg">
                 <Star className="w-5 h-5 text-yellow-400 mr-1 fill-current" />
-                <span className="font-semibold text-lg">{averageRating.toFixed(1)}</span>
-                <span className="text-gray-600 ml-1">({comments.length})</span>
+                <span className="font-semibold text-lg text-gray-900 dark:text-white">{averageRating.toFixed(1)}</span>
+                <span className="text-gray-600 dark:text-gray-400 ml-1">({comments.length})</span>
               </div>
             </div>
           </Card>
@@ -131,78 +195,91 @@ const BusinessPost = () => {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
-              <Card>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73]">About</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">About</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-700 leading-relaxed">{business.description}</p>
+                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed">{business.description}</p>
                 </CardContent>
               </Card>
 
               {/* Add Review */}
-              <Card>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73]">Write a Review</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Write a Review</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Your Rating</label>
-                    <div className="flex space-x-1">
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <button
-                          key={star}
-                          onClick={() => setUserRating(star)}
-                          className="focus:outline-none"
-                        >
-                          <Star 
-                            className={`w-6 h-6 ${
-                              star <= userRating 
-                                ? 'text-yellow-400 fill-current' 
-                                : 'text-gray-300'
-                            }`}
-                          />
-                        </button>
-                      ))}
+                  {!user ? (
+                    <div className="text-center py-8 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">Sign in to write a review</p>
+                      <Button onClick={signInWithGoogle} className="bg-[#007acc] hover:bg-[#005f73]">
+                        Sign in with Google
+                      </Button>
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Your Comment</label>
-                    <Textarea
-                      value={newComment}
-                      onChange={(e) => setNewComment(e.target.value)}
-                      placeholder="Share your experience..."
-                      className="min-h-[100px]"
-                    />
-                  </div>
-                  <Button 
-                    onClick={handleAddComment}
-                    disabled={!newComment.trim() || userRating === 0}
-                    className="bg-[#007acc] hover:bg-[#005f73]"
-                  >
-                    <Send className="w-4 h-4 mr-2" />
-                    Post Review
-                  </Button>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Your Rating</label>
+                        <div className="flex space-x-1">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              onClick={() => setUserRating(star)}
+                              className="focus:outline-none transition-colors"
+                            >
+                              <Star 
+                                className={`w-6 h-6 ${
+                                  star <= userRating 
+                                    ? 'text-yellow-400 fill-current' 
+                                    : 'text-gray-300 dark:text-gray-600'
+                                }`}
+                              />
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Your Comment</label>
+                        <Textarea
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                          placeholder="Share your experience..."
+                          className="min-h-[100px] bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+                        />
+                      </div>
+                      <Button 
+                        onClick={handleAddComment}
+                        disabled={!newComment.trim() || userRating === 0}
+                        className="bg-[#007acc] hover:bg-[#005f73]"
+                      >
+                        <Send className="w-4 h-4 mr-2" />
+                        Post Review
+                      </Button>
+                    </>
+                  )}
                 </CardContent>
               </Card>
 
               {/* Reviews */}
-              <Card>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] flex items-center">
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] flex items-center">
                     <MessageCircle className="w-5 h-5 mr-2" />
                     Reviews ({comments.length})
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {comments.map((comment) => (
-                    <div key={comment.id} className="border-b border-gray-200 pb-4 last:border-b-0">
+                    <div key={comment.id} className="border-b border-gray-200 dark:border-gray-700 pb-4 last:border-b-0">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center space-x-2">
-                          <div className="w-8 h-8 bg-[#007acc] text-white rounded-full flex items-center justify-center text-sm font-semibold">
-                            {comment.user.charAt(0)}
-                          </div>
-                          <span className="font-medium">{comment.user}</span>
+                          <img
+                            src={comment.userPhoto || `https://ui-avatars.com/api/?name=${comment.user}&background=007acc&color=fff`}
+                            alt={comment.user}
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <span className="font-medium text-gray-900 dark:text-white">{comment.user}</span>
                           <div className="flex items-center">
                             {[...Array(5)].map((_, i) => (
                               <Star
@@ -210,21 +287,25 @@ const BusinessPost = () => {
                                 className={`w-4 h-4 ${
                                   i < comment.rating
                                     ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-300'
+                                    : 'text-gray-300 dark:text-gray-600'
                                 }`}
                               />
                             ))}
                           </div>
                         </div>
-                        <span className="text-sm text-gray-500">{comment.date}</span>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">{comment.date}</span>
                       </div>
-                      <p className="text-gray-700 mb-2">{comment.comment}</p>
+                      <p className="text-gray-700 dark:text-gray-300 mb-2">{comment.comment}</p>
                       <div className="flex items-center space-x-4">
                         <button
                           onClick={() => handleLike(comment.id)}
-                          className="flex items-center space-x-1 text-gray-500 hover:text-[#007acc] transition-colors"
+                          className={`flex items-center space-x-1 transition-colors ${
+                            likedComments.has(comment.id)
+                              ? 'text-red-500'
+                              : 'text-gray-500 dark:text-gray-400 hover:text-[#007acc]'
+                          }`}
                         >
-                          <ThumbsUp className="w-4 h-4" />
+                          <Heart className={`w-4 h-4 ${likedComments.has(comment.id) ? 'fill-current' : ''}`} />
                           <span className="text-sm">{comment.likes}</span>
                         </button>
                       </div>
@@ -237,13 +318,13 @@ const BusinessPost = () => {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Contact Info */}
-              <Card>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73]">Contact Information</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Contact Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Button 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg"
                     onClick={() => window.open(`https://wa.me/91${business.whatsapp}`, '_blank')}
                   >
                     <Phone className="w-4 h-4 mr-2" />
@@ -251,14 +332,14 @@ const BusinessPost = () => {
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white"
+                    className="w-full border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white dark:border-[#00bfa6] dark:text-[#00bfa6] dark:hover:bg-[#00bfa6]"
                     onClick={() => window.open(`tel:+91${business.mobile}`, '_self')}
                   >
                     Call: +91 {business.mobile}
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full"
+                    className="w-full border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => navigator.share?.({ 
                       title: business.title, 
                       text: business.description,
@@ -272,25 +353,25 @@ const BusinessPost = () => {
               </Card>
 
               {/* Business Stats */}
-              <Card>
+              <Card className="shadow-lg border-0 bg-white dark:bg-gray-800">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73]">Business Stats</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6]">Business Stats</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Total Reviews:</span>
-                    <span className="font-semibold">{comments.length}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Total Reviews:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{comments.length}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Average Rating:</span>
-                    <span className="font-semibold">{averageRating.toFixed(1)}/5</span>
+                    <span className="text-gray-600 dark:text-gray-400">Average Rating:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{averageRating.toFixed(1)}/5</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">Category:</span>
-                    <span className="font-semibold text-sm">{business.category}</span>
+                    <span className="text-gray-600 dark:text-gray-400">Category:</span>
+                    <span className="font-semibold text-sm text-gray-900 dark:text-white">{business.category}</span>
                   </div>
                   {business.verified && (
-                    <div className="flex items-center justify-center bg-green-50 text-green-700 px-3 py-2 rounded-lg">
+                    <div className="flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-3 py-2 rounded-lg">
                       <span className="text-sm font-medium">✓ Verified Business</span>
                     </div>
                   )}
