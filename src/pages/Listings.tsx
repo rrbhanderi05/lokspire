@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -220,9 +219,14 @@ const Listings = () => {
                       <MapPin className="w-4 h-4 mr-1" />
                       {business.location}
                     </div>
-                    <div className="inline-block bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white px-3 py-1 rounded-full text-xs font-medium">
-                      {business.category}
-                    </div>
+                    <Link 
+                      to={`/category/${encodeURIComponent(business.category)}`} 
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="inline-block bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white px-3 py-1 rounded-full text-xs font-medium hover:from-[#005f73] hover:to-[#007acc] transition-all duration-300 cursor-pointer">
+                        {business.category}
+                      </div>
+                    </Link>
                   </CardHeader>
                   <CardContent>
                     <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm line-clamp-2">{business.description}</p>
