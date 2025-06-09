@@ -1,16 +1,19 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import CategoryGrid from '@/components/CategoryGrid';
 import FeaturedBusinesses from '@/components/FeaturedBusinesses';
 import Footer from '@/components/Footer';
 import SearchBar from '@/components/SearchBar';
+import SuccessStories from '@/components/SuccessStories';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Users, Shield, Star, Plus } from 'lucide-react';
+import { TrendingUp, Users, Shield, Star, Plus, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  const [showSuccessStories, setShowSuccessStories] = useState(false);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar />
@@ -112,13 +115,20 @@ const Home = () => {
 
       <FeaturedBusinesses />
       
-      {/* Why Choose Us - Simplified */}
+      {/* Why Choose Us - with Success Stories Button */}
       <div className="py-16 px-4 bg-gray-50 dark:bg-gray-800">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
               Why Choose Our Platform?
             </h2>
+            <Button 
+              onClick={() => setShowSuccessStories(true)}
+              className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white px-6 py-3 rounded-full mb-8"
+            >
+              <Award className="w-5 h-5 mr-2" />
+              Success Stories
+            </Button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -170,6 +180,11 @@ const Home = () => {
       </div>
       
       <Footer />
+
+      {/* Success Stories Modal */}
+      {showSuccessStories && (
+        <SuccessStories onClose={() => setShowSuccessStories(false)} />
+      )}
     </div>
   );
 };
