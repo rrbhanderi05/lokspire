@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -44,6 +43,7 @@ const areas = [
 const PostListing = () => {
   const { user, signInWithGoogle } = useAuth();
   const [formData, setFormData] = useState({
+    ownerName: '',
     title: '',
     description: '',
     category: '',
@@ -145,6 +145,7 @@ const PostListing = () => {
     alert('Listing submitted successfully! We will review and publish it soon.');
     
     setFormData({
+      ownerName: '',
       title: '',
       description: '',
       category: '',
@@ -176,6 +177,20 @@ const PostListing = () => {
             </CardHeader>
             <CardContent className="p-4 md:p-8">
               <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <Label htmlFor="ownerName" className="text-sm md:text-base font-semibold text-[#005f73] dark:text-[#00bfa6]">
+                    Owner Name *
+                  </Label>
+                  <Input
+                    id="ownerName"
+                    value={formData.ownerName}
+                    onChange={(e) => handleInputChange('ownerName', e.target.value)}
+                    placeholder="e.g., Priya Patel"
+                    className="mt-2 h-10 md:h-12 rounded-xl border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:border-[#007acc] focus:ring-[#007acc]"
+                    required
+                  />
+                </div>
+
                 <div>
                   <Label htmlFor="title" className="text-sm md:text-base font-semibold text-[#005f73] dark:text-[#00bfa6]">
                     Business Title *

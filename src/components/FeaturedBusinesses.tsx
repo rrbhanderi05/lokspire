@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { MapPin, Phone, Star, Shield, Award } from 'lucide-react';
+import { MapPin, Phone, Star, Shield, Award, User } from 'lucide-react';
 import { featuredBusinesses } from '@/data/businessData';
 
 const FeaturedBusinesses = () => {
@@ -51,6 +51,10 @@ const FeaturedBusinesses = () => {
                   <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-lg group-hover:text-[#007acc] dark:group-hover:text-[#0099cc] transition-colors">
                     {business.title}
                   </CardTitle>
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 mb-1">
+                    <User className="w-4 h-4 mr-1" />
+                    Owner: Priya Patel
+                  </div>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center text-sm text-gray-600 dark:text-gray-300">
                       <MapPin className="w-4 h-4 mr-1" />
