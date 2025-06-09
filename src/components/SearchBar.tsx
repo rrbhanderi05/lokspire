@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Search, MapPin, Tag } from 'lucide-react';
+import { Search, MapPin, Tag, TrendingUp } from 'lucide-react';
 import { featuredBusinesses, businessCategories } from '@/data/businessData';
 
 const areas = [
@@ -30,46 +30,78 @@ const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All Categories');
   const [selectedArea, setSelectedArea] = useState('All Areas');
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<any[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [categorySearch, setCategorySearch] = useState('');
+  const [areaSearch, setAreaSearch] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
-  // Generate all possible search suggestions from business data
-  const getAllSuggestions = () => {
-    const businessNames = featuredBusinesses.map(b => b.title);
-    const businessDescriptions = featuredBusinesses.flatMap(b => 
-      b.description.split(' ').filter(word => word.length > 3)
-    );
-    const categoryNames = businessCategories.map(c => c.name);
-    const locationNames = areas.filter(area => area !== 'All Areas');
+  // Trending topics
+  const trendingTopics = [
+    { text: 'Jewelry', type: 'category', icon: '💎' },
+    { text: 'Tiffin Service', type: 'category', icon: '🍱' },
+    { text: 'Bhojal Para', type: 'area', icon: '📍' },
+    { text: 'Homemade Snacks', type: 'category', icon: '🍪' }
+  ];
+
+  // Generate comprehensive suggestions
+  const generateSuggestions = (term: string) => {
+    if (!term || term.length === 0) {
+      return trendingTopics.map(topic => ({
+        ...topic,
+        trending: true
+      }));
+    }
+
+    const suggestions = [];
     
-    return [...new Set([...businessNames, ...categoryNames, ...locationNames, ...businessDescriptions])];
+    // Add businesses
+    featuredBusinesses.forEach(business => {
+      if (business.title.toLowerCase().includes(term.toLowerCase()) ||
+          business.description.toLowerCase().includes(term.toLowerCase())) {
+        suggestions.push({
+          text: business.title,
+          type: 'business',
+          icon: business.image,
+          id: business.id,
+          location: business.location,
+          category: business.category
+        });
+      }
+    });
+
+    // Add categories
+    businessCategories.forEach(category => {
+      if (category.name.toLowerCase().includes(term.toLowerCase())) {
+        suggestions.push({
+          text: category.name,
+          type: 'category',
+          icon: category.icon
+        });
+      }
+    });
+
+    // Add areas
+    areas.forEach(area => {
+      if (area !== 'All Areas' && area.toLowerCase().includes(term.toLowerCase())) {
+        suggestions.push({
+          text: area,
+          type: 'area',
+          icon: '📍'
+        });
+      }
+    });
+
+    return suggestions.slice(0, 4);
   };
 
-  const allSuggestions = getAllSuggestions();
-
   useEffect(() => {
-    if (searchTerm.length > 0) {
-      const filtered = allSuggestions.filter(suggestion =>
-        suggestion.toLowerCase().includes(searchTerm.toLowerCase())
-      ).slice(0, 8);
-      setSuggestions(filtered);
-      setShowSuggestions(true);
-      setFocusedIndex(-1);
-    } else if (showSuggestions && searchTerm.length === 0) {
-      // Show popular suggestions when clicked but no text
-      const popularSuggestions = [
-        'Jewelry', 'Tiffin Service', 'Clothes', 'Snacks', 'Beauty Products',
-        'Handicrafts', 'Tailoring', 'Jobs'
-      ];
-      setSuggestions(popularSuggestions);
-      setShowSuggestions(true);
-    } else {
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
+    const filtered = generateSuggestions(searchTerm);
+    setSuggestions(filtered);
+    setShowSuggestions(true);
+    setFocusedIndex(-1);
   }, [searchTerm]);
 
   const handleSearch = () => {
@@ -82,10 +114,17 @@ const SearchBar = () => {
     setShowSuggestions(false);
   };
 
-  const handleSuggestionClick = (suggestion: string) => {
-    setSearchTerm(suggestion);
+  const handleSuggestionClick = (suggestion: any) => {
+    if (suggestion.type === 'business') {
+      navigate(`/business/${suggestion.id}`);
+    } else if (suggestion.type === 'category') {
+      navigate(`/category/${encodeURIComponent(suggestion.text)}`);
+    } else if (suggestion.type === 'area') {
+      const params = new URLSearchParams();
+      params.set('area', suggestion.text);
+      navigate(`/listings?${params.toString()}`);
+    }
     setShowSuggestions(false);
-    searchRef.current?.focus();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -105,8 +144,7 @@ const SearchBar = () => {
       case 'Enter':
         e.preventDefault();
         if (focusedIndex >= 0) {
-          setSearchTerm(suggestions[focusedIndex]);
-          setShowSuggestions(false);
+          handleSuggestionClick(suggestions[focusedIndex]);
         } else {
           handleSearch();
         }
@@ -117,6 +155,14 @@ const SearchBar = () => {
         break;
     }
   };
+
+  const filteredCategories = businessCategories.filter(category =>
+    category.name.toLowerCase().includes(categorySearch.toLowerCase())
+  );
+
+  const filteredAreas = areas.filter(area =>
+    area.toLowerCase().includes(areaSearch.toLowerCase())
+  );
 
   return (
     <div className="relative max-w-4xl mx-auto">
@@ -140,13 +186,19 @@ const SearchBar = () => {
                 className="w-full h-12 pl-12 pr-4 text-base rounded-xl border-gray-200 dark:border-gray-600 focus:border-[#007acc] dark:focus:border-[#00bfa6] focus:ring-[#007acc] dark:focus:ring-[#00bfa6] bg-white dark:bg-gray-700"
               />
               
-              {/* Autocomplete Suggestions */}
+              {/* Enhanced Autocomplete Suggestions */}
               {showSuggestions && suggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg z-50 max-h-64 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-xl shadow-lg z-50 max-h-80 overflow-y-auto">
+                  {searchTerm.length === 0 && (
+                    <div className="px-4 py-2 text-sm text-gray-500 dark:text-gray-400 border-b border-gray-100 dark:border-gray-700 flex items-center">
+                      <TrendingUp className="w-4 h-4 mr-2" />
+                      Trending
+                    </div>
+                  )}
                   {suggestions.map((suggestion, index) => (
                     <div
-                      key={suggestion}
-                      className={`px-4 py-3 cursor-pointer transition-colors ${
+                      key={`${suggestion.type}-${suggestion.text}`}
+                      className={`px-4 py-3 cursor-pointer transition-colors border-b border-gray-50 dark:border-gray-700 last:border-b-0 ${
                         index === focusedIndex
                           ? 'bg-[#007acc]/10 dark:bg-[#00bfa6]/10 text-[#007acc] dark:text-[#00bfa6]'
                           : 'hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -154,8 +206,33 @@ const SearchBar = () => {
                       onClick={() => handleSuggestionClick(suggestion)}
                     >
                       <div className="flex items-center">
-                        <Search className="w-4 h-4 mr-3 text-gray-400" />
-                        {suggestion}
+                        {suggestion.type === 'business' ? (
+                          <img 
+                            src={suggestion.icon} 
+                            alt={suggestion.text}
+                            className="w-10 h-10 rounded-lg object-cover mr-3"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 flex items-center justify-center mr-3 text-lg">
+                            {suggestion.icon}
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="font-medium">{suggestion.text}</div>
+                          {suggestion.type === 'business' && (
+                            <div className="text-xs text-gray-500 dark:text-gray-400">
+                              {suggestion.category} • {suggestion.location}
+                            </div>
+                          )}
+                          {suggestion.trending && (
+                            <div className="text-xs text-[#007acc] dark:text-[#00bfa6]">
+                              Trending
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500 capitalize">
+                          {suggestion.type}
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -164,7 +241,7 @@ const SearchBar = () => {
             </div>
           </div>
 
-          {/* Category Select */}
+          {/* Category Select with Search */}
           <div className="md:col-span-3">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Category
@@ -177,10 +254,18 @@ const SearchBar = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-xl">
+                <div className="p-2">
+                  <Input
+                    placeholder="Search categories..."
+                    value={categorySearch}
+                    onChange={(e) => setCategorySearch(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
                 <SelectItem value="All Categories" className="text-gray-700 dark:text-gray-300">
                   All Categories
                 </SelectItem>
-                {businessCategories.map((category) => (
+                {filteredCategories.map((category) => (
                   <SelectItem key={category.id} value={category.name} className="text-gray-700 dark:text-gray-300">
                     {category.icon} {category.name}
                   </SelectItem>
@@ -189,7 +274,7 @@ const SearchBar = () => {
             </Select>
           </div>
 
-          {/* Area Select */}
+          {/* Area Select with Search */}
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Area
@@ -202,7 +287,15 @@ const SearchBar = () => {
                 </div>
               </SelectTrigger>
               <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-600 rounded-xl">
-                {areas.map((area) => (
+                <div className="p-2">
+                  <Input
+                    placeholder="Search areas..."
+                    value={areaSearch}
+                    onChange={(e) => setAreaSearch(e.target.value)}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                {filteredAreas.map((area) => (
                   <SelectItem key={area} value={area} className="text-gray-700 dark:text-gray-300">
                     {area}
                   </SelectItem>
