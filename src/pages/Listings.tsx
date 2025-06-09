@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -239,10 +239,18 @@ const areas = [
 ];
 
 const Listings = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Categories');
-  const [selectedArea, setSelectedArea] = useState('All Areas');
+  const [searchParams] = useSearchParams();
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState(searchParams.get('category') || 'All Categories');
+  const [selectedArea, setSelectedArea] = useState(searchParams.get('area') || 'All Areas');
   const [filteredBusinesses, setFilteredBusinesses] = useState(sampleBusinesses);
+
+  // Update state when URL parameters change
+  useEffect(() => {
+    setSearchTerm(searchParams.get('search') || '');
+    setSelectedCategory(searchParams.get('category') || 'All Categories');
+    setSelectedArea(searchParams.get('area') || 'All Areas');
+  }, [searchParams]);
 
   React.useEffect(() => {
     let filtered = sampleBusinesses;

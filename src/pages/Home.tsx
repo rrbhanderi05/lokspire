@@ -4,10 +4,10 @@ import Navbar from '@/components/Navbar';
 import CategoryGrid from '@/components/CategoryGrid';
 import FeaturedBusinesses from '@/components/FeaturedBusinesses';
 import Footer from '@/components/Footer';
+import SearchBar from '@/components/SearchBar';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Search, MapPin, TrendingUp, Users, Shield, Star, Plus } from 'lucide-react';
+import { TrendingUp, Users, Shield, Star, Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -15,43 +15,34 @@ const Home = () => {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar />
       
-      {/* Hero Section - Clean and Direct */}
+      {/* Hero Section with Enhanced Search */}
       <div className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] dark:from-[#005f73] dark:to-[#007acc] text-white">
         <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
-          <div className="text-center">
+          <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Find Local Businesses in Amreli
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
               Discover amazing home-based businesses, from handmade jewelry to delicious food
             </p>
-            
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto mb-8">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <Input
-                  placeholder="Search for businesses, products, or services..."
-                  className="w-full h-14 pl-12 pr-4 text-lg rounded-full border-0 shadow-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
-                />
-                <Button className="absolute right-2 top-2 h-10 px-6 rounded-full bg-[#007acc] hover:bg-[#005f73] text-white">
-                  Search
-                </Button>
-              </div>
-            </div>
+          </div>
+          
+          {/* Enhanced Search Bar */}
+          <div className="mb-8">
+            <SearchBar />
+          </div>
 
-            {/* Quick Actions */}
-            <div className="flex flex-wrap justify-center gap-4">
-              <Button asChild className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30 rounded-full px-6 py-3">
-                <Link to="/categories">Browse Categories</Link>
-              </Button>
-              <Button asChild className="bg-white text-[#007acc] hover:bg-gray-100 rounded-full px-6 py-3">
-                <Link to="/post">
-                  <Plus className="w-4 h-4 mr-2" />
-                  List Your Business
-                </Link>
-              </Button>
-            </div>
+          {/* Quick Actions */}
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button asChild className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30 rounded-full px-6 py-3">
+              <Link to="/categories">Browse Categories</Link>
+            </Button>
+            <Button asChild className="bg-white text-[#007acc] hover:bg-gray-100 rounded-full px-6 py-3">
+              <Link to="/post">
+                <Plus className="w-4 h-4 mr-2" />
+                List Your Business
+              </Link>
+            </Button>
           </div>
         </div>
       </div>
