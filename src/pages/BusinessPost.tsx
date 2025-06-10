@@ -6,7 +6,7 @@ import Footer from '@/components/Footer';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
-import { ArrowLeft, MapPin, Phone, Star, Share2, User } from 'lucide-react';
+import { ArrowLeft, MapPin, Phone, Star, Share2, User, Copy, Check } from 'lucide-react';
 import { featuredBusinesses } from '@/data/businessData';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
@@ -16,6 +16,7 @@ const BusinessPost = () => {
   const navigate = useNavigate();
   const { user, signInWithGoogle } = useAuth();
   const [userRating, setUserRating] = useState(0);
+  const [copied, setCopied] = useState(false);
   const [ratings, setRatings] = useState([
     { id: 1, user: "Anjali Patel", rating: 5, date: "2024-01-15" },
     { id: 2, user: "Raj Shah", rating: 4, date: "2024-01-10" },
@@ -28,12 +29,12 @@ const BusinessPost = () => {
 
   if (!business) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <Navbar />
         <div className="py-12 px-4 text-center">
           <h1 className="text-2xl font-bold text-gray-600 dark:text-gray-400 mb-4">Business not found</h1>
           <Link to="/listings">
-            <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc]">
+            <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl">
               Back to Listings
             </Button>
           </Link>
@@ -75,6 +76,47 @@ const BusinessPost = () => {
     }
   };
 
+  const handleShare = async () => {
+    const shareData = {
+      title: `${business.title} - Premium Local Business`,
+      text: `Check out this amazing business: ${business.description}`,
+      url: window.location.href
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+        toast({
+          title: "Shared successfully!",
+          description: "Business details shared successfully."
+        });
+      } catch (error) {
+        console.log('Error sharing:', error);
+        fallbackShare();
+      }
+    } else {
+      fallbackShare();
+    }
+  };
+
+  const fallbackShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+      toast({
+        title: "Link copied!",
+        description: "Business link copied to clipboard."
+      });
+    } catch (error) {
+      toast({
+        title: "Share failed",
+        description: "Unable to share this business.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const averageRating = ratings.reduce((sum, rating) => sum + rating.rating, 0) / ratings.length;
 
   return (
@@ -87,14 +129,14 @@ const BusinessPost = () => {
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="mb-6 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300"
+            className="mb-6 hover:bg-white/80 dark:hover:bg-gray-800/80 text-gray-700 dark:text-gray-300 rounded-xl backdrop-blur-sm"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
 
           {/* Business Header with Image Slider */}
-          <Card className="mb-8 overflow-hidden shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+          <Card className="mb-8 overflow-hidden shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
             <div className="relative">
               <Carousel className="w-full">
                 <CarouselContent>
@@ -106,17 +148,17 @@ const BusinessPost = () => {
                           alt={`${business.title} - Image ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-black bg-opacity-40" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       </div>
                     </CarouselItem>
                   ))}
                 </CarouselContent>
-                <CarouselPrevious className="left-4 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700" />
-                <CarouselNext className="right-4 bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700" />
+                <CarouselPrevious className="left-4 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 backdrop-blur-sm" />
+                <CarouselNext className="right-4 bg-white/90 dark:bg-gray-800/90 hover:bg-white dark:hover:bg-gray-700 backdrop-blur-sm" />
               </Carousel>
               
               <div className="absolute bottom-6 left-6 text-white">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-lg">{business.title}</h1>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2 drop-shadow-2xl">{business.title}</h1>
                 <div className="flex items-center mb-2">
                   <User className="w-5 h-5 mr-2" />
                   <span className="text-lg drop-shadow-lg">Owner: Priya Patel</span>
@@ -129,7 +171,7 @@ const BusinessPost = () => {
                   {business.category}
                 </div>
               </div>
-              <div className="absolute top-6 right-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center shadow-xl">
+              <div className="absolute top-6 right-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl px-4 py-3 flex items-center shadow-2xl">
                 <Star className="w-5 h-5 text-yellow-400 mr-1 fill-current" />
                 <span className="font-bold text-lg text-gray-900 dark:text-white">{averageRating.toFixed(1)}</span>
                 <span className="text-gray-600 dark:text-gray-400 ml-1">({ratings.length})</span>
@@ -141,9 +183,9 @@ const BusinessPost = () => {
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Description */}
-              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+              <Card className="shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">About</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">About This Business</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">{business.description}</p>
@@ -151,7 +193,7 @@ const BusinessPost = () => {
               </Card>
 
               {/* Add Rating */}
-              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+              <Card className="shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
                 <CardHeader>
                   <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Rate This Business</CardTitle>
                 </CardHeader>
@@ -159,7 +201,7 @@ const BusinessPost = () => {
                   {!user ? (
                     <div className="text-center py-8 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 rounded-xl">
                       <p className="text-gray-600 dark:text-gray-300 mb-4">Sign in to rate this business</p>
-                      <Button onClick={signInWithGoogle} className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg">
+                      <Button onClick={signInWithGoogle} className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl">
                         Sign in with Google
                       </Button>
                     </div>
@@ -188,7 +230,7 @@ const BusinessPost = () => {
                       <Button 
                         onClick={handleAddRating}
                         disabled={userRating === 0}
-                        className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-lg"
+                        className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl"
                       >
                         Submit Rating
                       </Button>
@@ -198,11 +240,11 @@ const BusinessPost = () => {
               </Card>
 
               {/* Ratings */}
-              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+              <Card className="shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
                 <CardHeader>
                   <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl flex items-center">
                     <Star className="w-5 h-5 mr-2" />
-                    Ratings ({ratings.length})
+                    Customer Ratings ({ratings.length})
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -240,13 +282,13 @@ const BusinessPost = () => {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Contact Info */}
-              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+              <Card className="shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
                 <CardHeader>
                   <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Contact Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <Button 
-                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl"
                     onClick={() => window.open(`https://wa.me/91${business.whatsapp}`, '_blank')}
                   >
                     <Phone className="w-4 h-4 mr-2" />
@@ -254,30 +296,26 @@ const BusinessPost = () => {
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full border-2 border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white dark:border-[#00bfa6] dark:text-[#00bfa6] dark:hover:bg-[#00bfa6] dark:hover:text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="w-full border-2 border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white dark:border-[#00bfa6] dark:text-[#00bfa6] dark:hover:bg-[#00bfa6] dark:hover:text-white shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl"
                     onClick={() => window.open(`tel:+91${business.mobile}`, '_self')}
                   >
                     Call: +91 {business.mobile}
                   </Button>
                   <Button 
                     variant="outline"
-                    className="w-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-lg hover:shadow-xl transition-all duration-300"
-                    onClick={() => navigator.share?.({ 
-                      title: business.title, 
-                      text: business.description,
-                      url: window.location.href 
-                    })}
+                    className="w-full border-2 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-xl hover:shadow-2xl transition-all duration-300 rounded-xl"
+                    onClick={handleShare}
                   >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share Business
+                    {copied ? <Check className="w-4 h-4 mr-2" /> : <Share2 className="w-4 h-4 mr-2" />}
+                    {copied ? 'Link Copied!' : 'Share Business'}
                   </Button>
                 </CardContent>
               </Card>
 
               {/* Business Stats */}
-              <Card className="shadow-xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm">
+              <Card className="shadow-2xl border-0 bg-white/90 dark:bg-gray-800/90 backdrop-blur-xl">
                 <CardHeader>
-                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Business Stats</CardTitle>
+                  <CardTitle className="text-[#005f73] dark:text-[#00bfa6] text-xl">Business Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex justify-between items-center">
@@ -298,7 +336,7 @@ const BusinessPost = () => {
                   </div>
                   {business.verified && (
                     <div className="flex items-center justify-center bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 text-green-700 dark:text-green-400 px-4 py-3 rounded-xl border border-green-200 dark:border-green-800">
-                      <span className="text-sm font-bold">✓ Verified Business</span>
+                      <span className="text-sm font-bold">✓ Verified Premium Business</span>
                     </div>
                   )}
                 </CardContent>

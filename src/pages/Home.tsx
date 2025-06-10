@@ -8,41 +8,51 @@ import SearchBar from '@/components/SearchBar';
 import SuccessStories from '@/components/SuccessStories';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Users, Shield, Star, Plus, Award } from 'lucide-react';
+import { TrendingUp, Users, Shield, Star, Plus, Award, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [showSuccessStories, setShowSuccessStories] = useState(false);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
       <Navbar />
       
       {/* Hero Section with Enhanced Search */}
-      <div className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] dark:from-[#005f73] dark:to-[#007acc] text-white">
-        <div className="max-w-7xl mx-auto px-4 py-16 md:py-24">
+      <div className="relative bg-gradient-to-br from-[#007acc] via-[#00bfa6] to-[#007acc] dark:from-[#005f73] dark:via-[#007acc] dark:to-[#005f73] text-white overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="3"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] animate-pulse"></div>
+        <div className="max-w-7xl mx-auto px-4 py-20 md:py-32 relative">
           <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Find Local Businesses in Amreli
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex items-center px-6 py-3 bg-white/20 backdrop-blur-sm rounded-full border border-white/30">
+                <Sparkles className="w-5 h-5 mr-2" />
+                <span className="text-sm font-semibold">Premium Local Business Platform</span>
+              </div>
+            </div>
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Discover Premium
+              <span className="block bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                Local Businesses
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-3xl mx-auto">
-              Discover amazing home-based businesses, from handmade jewelry to delicious food
+            <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-4xl mx-auto leading-relaxed">
+              Connect with exceptional home-based entrepreneurs in Amreli. From handcrafted jewelry to gourmet delicacies.
             </p>
           </div>
           
           {/* Enhanced Search Bar */}
-          <div className="mb-8">
+          <div className="mb-12">
             <SearchBar />
           </div>
 
           {/* Quick Actions */}
-          <div className="flex flex-wrap justify-center gap-4">
-            <Button asChild className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30 rounded-full px-6 py-3">
+          <div className="flex flex-wrap justify-center gap-6">
+            <Button asChild className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white border-white/30 rounded-full px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300">
               <Link to="/categories">Browse Categories</Link>
             </Button>
-            <Button asChild className="bg-white text-[#007acc] hover:bg-gray-100 rounded-full px-6 py-3">
+            <Button asChild className="bg-white text-[#007acc] hover:bg-gray-100 rounded-full px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300">
               <Link to="/post">
-                <Plus className="w-4 h-4 mr-2" />
+                <Plus className="w-5 h-5 mr-2" />
                 List Your Business
               </Link>
             </Button>
@@ -51,42 +61,50 @@ const Home = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="py-12 px-4 bg-gray-50 dark:bg-gray-800">
+      <div className="py-16 px-4 bg-gradient-to-r from-gray-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-[#007acc] dark:text-[#00bfa6] mb-2">500+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Local Businesses</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent mb-2">500+</div>
+                <div className="text-gray-600 dark:text-gray-300 font-semibold">Premium Businesses</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-[#007acc] dark:text-[#00bfa6] mb-2">1000+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Happy Customers</div>
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent mb-2">1000+</div>
+                <div className="text-gray-600 dark:text-gray-300 font-semibold">Satisfied Customers</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-[#007acc] dark:text-[#00bfa6] mb-2">50+</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Categories</div>
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent mb-2">50+</div>
+                <div className="text-gray-600 dark:text-gray-300 font-semibold">Categories</div>
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-[#007acc] dark:text-[#00bfa6] mb-2">24/7</div>
-              <div className="text-gray-600 dark:text-gray-300 font-medium">Support</div>
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 group-hover:scale-105">
+                <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-[#007acc] to-[#00bfa6] bg-clip-text text-transparent mb-2">24/7</div>
+                <div className="text-gray-600 dark:text-gray-300 font-semibold">Premium Support</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Popular Categories - Horizontal Scroll */}
-      <div className="py-12 px-4 bg-white dark:bg-gray-900">
+      <div className="py-16 px-4 bg-white dark:bg-gray-950">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
               Popular Categories
             </h2>
-            <Button asChild variant="outline" className="rounded-full">
+            <Button asChild variant="outline" className="rounded-full border-2 border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white px-6">
               <Link to="/categories">View All</Link>
             </Button>
           </div>
           
-          <div className="flex gap-4 overflow-x-auto pb-4">
+          <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
             {[
               { name: 'Clothes & Fashion', icon: '👗', count: '45 businesses' },
               { name: 'Homemade Snacks', icon: '🍪', count: '32 businesses' },
@@ -98,13 +116,13 @@ const Home = () => {
               <Link 
                 key={category.name} 
                 to={`/category/${encodeURIComponent(category.name)}`}
-                className="flex-shrink-0"
+                className="flex-shrink-0 group"
               >
-                <Card className="w-48 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                  <CardContent className="p-6 text-center">
-                    <div className="text-4xl mb-3">{category.icon}</div>
-                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{category.name}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{category.count}</p>
+                <Card className="w-52 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border-0 shadow-xl group-hover:shadow-blue-500/25">
+                  <CardContent className="p-8 text-center">
+                    <div className="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{category.icon}</div>
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-3">{category.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-3 py-1 rounded-full">{category.count}</p>
                   </CardContent>
                 </Card>
               </Link>
@@ -116,64 +134,70 @@ const Home = () => {
       <FeaturedBusinesses />
       
       {/* Why Choose Us - with Success Stories Button */}
-      <div className="py-16 px-4 bg-gray-50 dark:bg-gray-800">
+      <div className="py-20 px-4 bg-gradient-to-r from-gray-50 via-blue-50 to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Why Choose Our Platform?
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-6">
+              Why Choose Our Premium Platform?
             </h2>
             <Button 
               onClick={() => setShowSuccessStories(true)}
-              className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white px-6 py-3 rounded-full mb-8"
+              className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] text-white px-8 py-4 rounded-full mb-8 shadow-xl hover:shadow-2xl transition-all duration-500 text-lg font-semibold"
             >
-              <Award className="w-5 h-5 mr-2" />
+              <Award className="w-6 h-6 mr-2" />
               Success Stories
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#007acc] dark:bg-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="w-8 h-8 text-white" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 group-hover:-translate-y-2">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Shield className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Verified Premium Businesses</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">All businesses undergo rigorous verification for exceptional quality and authenticity</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Verified Businesses</h3>
-              <p className="text-gray-600 dark:text-gray-300">All businesses are verified for quality and authenticity</p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#007acc] dark:bg-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-4">
-                <TrendingUp className="w-8 h-8 text-white" />
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 group-hover:-translate-y-2">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <TrendingUp className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Thriving Community</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Join hundreds of successful local entrepreneurs in our premium ecosystem</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Growing Community</h3>
-              <p className="text-gray-600 dark:text-gray-300">Join hundreds of successful local entrepreneurs</p>
             </div>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-[#007acc] dark:bg-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-white" />
+            <div className="text-center group">
+              <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 shadow-2xl hover:shadow-blue-500/25 transition-all duration-500 group-hover:-translate-y-2">
+                <div className="w-20 h-20 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <Users className="w-10 h-10 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Local Excellence</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">Empowering local economy through premium business connections</p>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Local Focus</h3>
-              <p className="text-gray-600 dark:text-gray-300">Supporting the local economy and community connections</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* CTA Section - Clean */}
-      <div className="py-16 px-4 bg-white dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-            Ready to Get Started?
+      {/* CTA Section - Premium */}
+      <div className="py-20 px-4 bg-white dark:bg-gray-950">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-8">
+            Ready to Experience Premium?
           </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            Whether you're looking for local services or want to grow your business, we're here to help.
+          <p className="text-xl text-gray-600 dark:text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+            Whether you're seeking exceptional local services or ready to showcase your premium business, we're here to elevate your experience.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-[#007acc] hover:bg-[#005f73] text-white px-8 py-4 rounded-full text-lg">
-              <Link to="/listings">Find Businesses</Link>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button asChild size="lg" className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] text-white px-10 py-6 rounded-full text-xl font-semibold shadow-2xl hover:shadow-blue-500/25 transition-all duration-500">
+              <Link to="/listings">Discover Businesses</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white px-8 py-4 rounded-full text-lg">
-              <Link to="/post">Start Selling</Link>
+            <Button asChild variant="outline" size="lg" className="border-2 border-[#007acc] text-[#007acc] hover:bg-[#007acc] hover:text-white px-10 py-6 rounded-full text-xl font-semibold shadow-xl hover:shadow-2xl transition-all duration-500">
+              <Link to="/post">Start Premium Journey</Link>
             </Button>
           </div>
         </div>
