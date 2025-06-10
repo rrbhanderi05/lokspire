@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { TrendingUp, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import SearchBar from '@/components/SearchBar';
 
 const Hero = () => {
@@ -18,7 +18,6 @@ const Hero = () => {
               className="h-12 md:h-16 object-contain"
               loading="eager"
               decoding="async"
-              fetchPriority="high"
             />
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-3 leading-tight">
@@ -29,12 +28,10 @@ const Hero = () => {
           </p>
         </div>
         
-        {/* Search Bar */}
         <div className="mb-6">
           <SearchBar />
         </div>
 
-        {/* Quick Actions */}
         <div className="flex flex-wrap justify-center gap-4">
           <Button asChild className="bg-white/20 hover:bg-white/30 text-white border-white/20 rounded-lg px-6 py-2 font-semibold">
             <Link to="/categories">Browse Categories</Link>
