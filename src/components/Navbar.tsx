@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info } from 'lucide-react';
+import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useTheme } from '@/contexts/ThemeContext';
@@ -11,13 +11,13 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { user, signInWithGoogle, logout } = useAuth();
+  const { user, signInWithGoogle, logout, loading } = useAuth();
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Browse Listings', path: '/listings', icon: List },
+    { name: 'Browse', path: '/listings', icon: List },
     { name: 'Categories', path: '/categories', icon: Grid3X3 },
-    { name: 'Post Listing', path: '/post', icon: Plus },
+    { name: 'Sell', path: '/post', icon: Plus },
     { name: 'About', path: '/about', icon: Info },
   ];
 
@@ -29,7 +29,7 @@ const Navbar = () => {
             <Link to="/" className="flex items-center group">
               <img 
                 src="https://raw.githubusercontent.com/rrbhanderi05/FileHosting/refs/heads/main/Lokspire.png" 
-                alt="Logo" 
+                alt="Lokspire" 
                 className="h-12 md:h-16 shadow-xl hover:shadow-2xl transition-all duration-500 object-contain group-hover:scale-105"
               />
             </Link>
@@ -60,14 +60,22 @@ const Navbar = () => {
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </Button>
 
-            {user ? (
+            {loading ? (
+              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+            ) : user ? (
               <div className="flex items-center space-x-4">
                 <div className="relative group">
-                  <img 
-                    src={user.photoURL || ''} 
-                    alt={user.displayName || 'User'} 
-                    className="w-12 h-12 rounded-full border-3 border-gradient-to-r from-[#007acc] to-[#00bfa6] shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110"
-                  />
+                  {user.photoURL ? (
+                    <img 
+                      src={user.photoURL} 
+                      alt={user.displayName || 'User'} 
+                      className="w-12 h-12 rounded-full border-3 border-gradient-to-r from-[#007acc] to-[#00bfa6] shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                      <User className="w-6 h-6 text-white" />
+                    </div>
+                  )}
                   <div className="absolute -inset-1 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full opacity-75 group-hover:opacity-100 blur transition-all duration-300"></div>
                 </div>
                 <Button
@@ -77,7 +85,7 @@ const Navbar = () => {
                   className="text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-xl transition-all duration-300"
                 >
                   <LogOut className="w-4 h-4 mr-1" />
-                  Logout
+                  Sign Out
                 </Button>
               </div>
             ) : (
@@ -140,17 +148,27 @@ const Navbar = () => {
                     </Link>
                   ))}
                   
-                  {user ? (
+                  {loading ? (
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse"></div>
+                    </div>
+                  ) : user ? (
                     <div className="pt-4 space-y-4 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900 rounded-2xl">
-                        <img 
-                          src={user.photoURL || ''} 
-                          alt={user.displayName || 'User'} 
-                          className="w-10 h-10 rounded-full mr-4 border-2 border-white shadow-lg"
-                        />
+                        {user.photoURL ? (
+                          <img 
+                            src={user.photoURL} 
+                            alt={user.displayName || 'User'} 
+                            className="w-10 h-10 rounded-full mr-4 border-2 border-white shadow-lg"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center mr-4 shadow-lg">
+                            <User className="w-5 h-5 text-white" />
+                          </div>
+                        )}
                         <div>
-                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.displayName}</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">Premium User</div>
+                          <div className="text-sm font-semibold text-gray-900 dark:text-white">{user.displayName || 'User'}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Signed In</div>
                         </div>
                       </div>
                       <Button
@@ -159,7 +177,7 @@ const Navbar = () => {
                         className="w-full justify-start px-6 py-4 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-500"
                       >
                         <LogOut className="w-5 h-5 mr-4" />
-                        Logout
+                        Sign Out
                       </Button>
                     </div>
                   ) : (

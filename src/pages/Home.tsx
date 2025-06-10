@@ -27,18 +27,18 @@ const Home = () => {
             <div className="flex justify-center mb-8">
               <div className="inline-flex items-center px-8 py-4 bg-white/10 backdrop-blur-md rounded-full border border-white/20 shadow-2xl">
                 <Sparkles className="w-6 h-6 mr-3 text-yellow-300" />
-                <span className="text-lg font-bold tracking-wide">World's Premier Local Business Platform</span>
+                <span className="text-lg font-bold tracking-wide">Your Local Business Network</span>
               </div>
             </div>
             <h1 className="text-6xl md:text-8xl font-black mb-8 leading-tight tracking-tight">
               Discover
               <span className="block bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 bg-clip-text text-transparent drop-shadow-2xl">
-                Exceptional
+                Local
               </span>
-              <span className="block text-5xl md:text-7xl mt-2">Local Businesses</span>
+              <span className="block text-5xl md:text-7xl mt-2">Businesses</span>
             </h1>
             <p className="text-xl md:text-3xl mb-12 text-white/95 max-w-5xl mx-auto leading-relaxed font-light">
-              Connect with extraordinary home-based entrepreneurs in Amreli. From luxury handcrafted jewelry to gourmet culinary experiences.
+              Connect with amazing home-based entrepreneurs in Amreli. From handcrafted jewelry to delicious homemade food.
             </p>
           </div>
           
@@ -50,12 +50,12 @@ const Home = () => {
           {/* Quick Actions */}
           <div className="flex flex-wrap justify-center gap-8">
             <Button asChild className="bg-white/15 backdrop-blur-md hover:bg-white/25 text-white border-white/20 rounded-full px-12 py-6 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all duration-500 hover:scale-105">
-              <Link to="/categories">Browse Premium Categories</Link>
+              <Link to="/categories">Browse Categories</Link>
             </Button>
             <Button asChild className="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 hover:from-yellow-300 hover:to-orange-300 rounded-full px-12 py-6 text-xl font-bold shadow-2xl hover:shadow-yellow/25 transition-all duration-500 hover:scale-105">
               <Link to="/post">
                 <Plus className="w-6 h-6 mr-3" />
-                Start Premium Journey
+                Start Selling
               </Link>
             </Button>
           </div>
@@ -69,13 +69,13 @@ const Home = () => {
             <div className="text-center group">
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl hover:shadow-indigo-500/25 transition-all duration-500 group-hover:scale-110 border border-white/20">
                 <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">500+</div>
-                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Premium Businesses</div>
+                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Active Businesses</div>
               </div>
             </div>
             <div className="text-center group">
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl hover:shadow-indigo-500/25 transition-all duration-500 group-hover:scale-110 border border-white/20">
                 <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">1000+</div>
-                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Satisfied Customers</div>
+                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Happy Customers</div>
               </div>
             </div>
             <div className="text-center group">
@@ -87,7 +87,7 @@ const Home = () => {
             <div className="text-center group">
               <div className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-lg rounded-3xl p-8 shadow-2xl hover:shadow-indigo-500/25 transition-all duration-500 group-hover:scale-110 border border-white/20">
                 <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-3">24/7</div>
-                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Premium Support</div>
+                <div className="text-gray-700 dark:text-gray-300 font-bold text-lg">Support</div>
               </div>
             </div>
           </div>
@@ -99,18 +99,18 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-16">
             <h2 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-gray-900 via-indigo-800 to-purple-800 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent">
-              Premium Categories
+              Popular Categories
             </h2>
             <Button asChild variant="outline" className="rounded-full border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white px-8 py-3 text-lg font-bold shadow-lg">
-              <Link to="/categories">Explore All</Link>
+              <Link to="/categories">View All</Link>
             </Button>
           </div>
           
           <div className="flex gap-8 overflow-x-auto pb-6 scrollbar-hide">
             {[
-              { name: 'Luxury Fashion', icon: '👗', count: '45+ businesses' },
-              { name: 'Gourmet Snacks', icon: '🍪', count: '32+ businesses' },
-              { name: 'Premium Jewelry', icon: '💍', count: '28+ businesses' },
+              { name: 'Fashion & Clothing', icon: '👗', count: '45+ businesses' },
+              { name: 'Homemade Food', icon: '🍪', count: '32+ businesses' },
+              { name: 'Jewelry & Accessories', icon: '💍', count: '28+ businesses' },
               { name: 'Tiffin Services', icon: '🍛', count: '24+ businesses' },
               { name: 'Beauty Products', icon: '💄', count: '20+ businesses' },
               { name: 'Handcrafts', icon: '🎨', count: '18+ businesses' }
@@ -140,7 +140,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-20">
             <h2 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-indigo-800 via-purple-800 to-pink-800 dark:from-indigo-200 dark:via-purple-200 dark:to-pink-200 bg-clip-text text-transparent mb-8">
-              Why Choose Our World-Class Platform?
+              Why Choose Us?
             </h2>
             <Button 
               onClick={() => setShowSuccessStories(true)}
@@ -157,8 +157,8 @@ const Home = () => {
                 <div className="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg">
                   <Shield className="w-12 h-12 text-white" />
                 </div>
-                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Verified Premium Businesses</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">All businesses undergo rigorous verification for exceptional quality and authenticity</p>
+                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Verified Businesses</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">All businesses are carefully verified for quality and authenticity</p>
               </div>
             </div>
             
@@ -167,8 +167,8 @@ const Home = () => {
                 <div className="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg">
                   <TrendingUp className="w-12 h-12 text-white" />
                 </div>
-                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Thriving Ecosystem</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">Join hundreds of successful local entrepreneurs in our premium ecosystem</p>
+                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Growing Community</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">Join hundreds of successful local entrepreneurs</p>
               </div>
             </div>
             
@@ -177,29 +177,29 @@ const Home = () => {
                 <div className="w-24 h-24 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-8 group-hover:scale-110 transition-transform duration-500 shadow-lg">
                   <Users className="w-12 h-12 text-white" />
                 </div>
-                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Local Excellence</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">Empowering local economy through premium business connections</p>
+                <h3 className="text-3xl font-black text-gray-900 dark:text-white mb-6">Local Support</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">Supporting the local economy and community growth</p>
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* CTA Section - Premium */}
+      {/* CTA Section */}
       <div className="py-24 px-4 bg-white dark:bg-gray-950">
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-5xl md:text-7xl font-black bg-gradient-to-r from-gray-900 via-indigo-800 to-purple-800 dark:from-white dark:via-indigo-300 dark:to-purple-300 bg-clip-text text-transparent mb-10">
-            Ready for World-Class Excellence?
+            Ready to Get Started?
           </h2>
           <p className="text-2xl text-gray-600 dark:text-gray-300 mb-16 max-w-4xl mx-auto leading-relaxed font-light">
-            Whether you're seeking exceptional local services or ready to showcase your premium business, we're here to elevate your experience to global standards.
+            Whether you're looking for amazing local services or ready to start your own business, we're here to help you succeed.
           </p>
           <div className="flex flex-col sm:flex-row gap-8 justify-center">
             <Button asChild size="lg" className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 hover:from-indigo-500 hover:via-purple-500 hover:to-pink-500 text-white px-16 py-8 rounded-full text-2xl font-black shadow-2xl hover:shadow-purple-500/25 transition-all duration-500 hover:scale-105">
-              <Link to="/listings">Discover Premium Businesses</Link>
+              <Link to="/listings">Find Businesses</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white px-16 py-8 rounded-full text-2xl font-black shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105">
-              <Link to="/post">Begin Premium Journey</Link>
+              <Link to="/post">Start Selling</Link>
             </Button>
           </div>
         </div>
