@@ -52,16 +52,16 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     console.log('Redirecting to WorkOS sign-in...');
     const signInUrl = getAuthKitSignInUrl();
     console.log('Sign-in URL:', signInUrl);
-    // Use window.location.href for full page redirect (no popup)
-    window.location.href = signInUrl;
+    // Force full page redirect
+    window.location.assign(signInUrl);
   };
 
   const signUp = () => {
     console.log('Redirecting to WorkOS sign-up...');
     const signUpUrl = getAuthKitSignUpUrl();
     console.log('Sign-up URL:', signUpUrl);
-    // Use window.location.href for full page redirect (no popup)
-    window.location.href = signUpUrl;
+    // Force full page redirect
+    window.location.assign(signUpUrl);
   };
 
   const signOut = () => {
@@ -70,8 +70,8 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.removeItem('workos_user');
     const signOutUrl = signOutFromAuthKit();
     console.log('Sign-out URL:', signOutUrl);
-    // Use window.location.href for full page redirect
-    window.location.href = signOutUrl;
+    // Force full page redirect
+    window.location.assign(signOutUrl);
   };
 
   return (
