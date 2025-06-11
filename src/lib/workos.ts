@@ -16,19 +16,21 @@ export const workosConfig = {
 // Helper function to get AuthKit sign-in URL
 export const getAuthKitSignInUrl = (returnTo?: string) => {
   const baseUrl = `${workosConfig.authKitUrl}/sign-in`;
+  const redirectTo = returnTo || `${window.location.origin}/auth/callback`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    return_to: returnTo || `${window.location.origin}/auth/callback`,
+    return_to: redirectTo,
   });
   return `${baseUrl}?${params.toString()}`;
 };
 
-// Helper function to get AuthKit sign-up URL
+// Helper function to get AuthKit sign-up URL  
 export const getAuthKitSignUpUrl = (returnTo?: string) => {
   const baseUrl = `${workosConfig.authKitUrl}/sign-up`;
+  const redirectTo = returnTo || `${window.location.origin}/auth/callback`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    return_to: returnTo || `${window.location.origin}/auth/callback`,
+    return_to: redirectTo,
   });
   return `${baseUrl}?${params.toString()}`;
 };
