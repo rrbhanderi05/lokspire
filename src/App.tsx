@@ -16,6 +16,7 @@ import BusinessPost from "./pages/BusinessPost";
 import About from "./pages/About";
 import Auth from "./pages/Auth";
 import AuthCallback from "./pages/AuthCallback";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,6 +34,7 @@ const App = () => (
                 <Route path="/" element={<Home />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/auth/callback" element={<AuthCallback />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/post" element={<PostListing />} />
                 <Route path="/listings" element={<Listings />} />
                 <Route path="/categories" element={<Categories />} />

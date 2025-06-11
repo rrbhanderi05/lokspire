@@ -4,6 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User, Building2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useWorkOS } from '@/contexts/WorkOSContext';
 
@@ -20,6 +21,20 @@ const Navbar = () => {
     { name: 'Sell', path: '/post', icon: Plus },
     { name: 'About', path: '/about', icon: Info },
   ];
+
+  const getInitials = () => {
+    if (user?.firstName || user?.lastName) {
+      return `${user.firstName?.charAt(0) || ''}${user.lastName?.charAt(0) || ''}`.toUpperCase();
+    }
+    return user?.email?.charAt(0).toUpperCase() || 'U';
+  };
+
+  const getDisplayName = () => {
+    if (user?.firstName || user?.lastName) {
+      return `${user.firstName || ''} ${user.lastName || ''}`.trim();
+    }
+    return user?.email || 'User';
+  };
 
   return (
     <nav className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-2xl sticky top-0 z-50 border-b border-gray-200/50 dark:border-gray-700/50">
@@ -64,18 +79,20 @@ const Navbar = () => {
               <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
             ) : user ? (
               <div className="flex items-center space-x-4">
-                <div className="relative group">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                    <Building2 className="w-6 h-6 text-white" />
+                <Link to="/profile" className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 transition-colors">
+                  <Avatar className="w-10 h-10">
+                    <AvatarImage src={user.profilePicture} alt="Profile" />
+                    <AvatarFallback className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white text-sm font-bold">
+                      {getInitials()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="text-sm">
+                    <div className="font-semibold text-gray-900 dark:text-white">
+                      {getDisplayName()}
+                    </div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">Enterprise User</div>
                   </div>
-                  <div className="absolute -inset-1 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full opacity-75 group-hover:opacity-100 blur transition-all duration-300"></div>
-                </div>
-                <div className="text-sm">
-                  <div className="font-semibold text-gray-900 dark:text-white">
-                    {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400">Enterprise User</div>
-                </div>
+                </Link>
                 <Button
                   onClick={signOut}
                   variant="ghost"
@@ -153,19 +170,26 @@ const Navbar = () => {
                     </div>
                   ) : user ? (
                     <div className="pt-4 space-y-4 border-t border-gray-200 dark:border-gray-700">
-                      <div className="flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900 rounded-2xl">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center mr-4 shadow-lg">
-                          <Building2 className="w-5 h-5 text-white" />
-                        </div>
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900 rounded-2xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900 dark:hover:to-blue-800 transition-colors"
+                      >
+                        <Avatar className="w-10 h-10 mr-4">
+                          <AvatarImage src={user.profilePicture} alt="Profile" />
+                          <AvatarFallback className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white text-sm font-bold">
+                            {getInitials()}
+                          </AvatarFallback>
+                        </Avatar>
                         <div>
                           <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
+                            {getDisplayName()}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            Enterprise User
+                            View Profile
                           </div>
                         </div>
-                      </div>
+                      </Link>
                       <Button
                         onClick={signOut}
                         variant="ghost"

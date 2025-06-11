@@ -8,6 +8,7 @@ interface User {
   firstName?: string;
   lastName?: string;
   organizationId?: string;
+  profilePicture?: string;
 }
 
 interface WorkOSContextType {
@@ -16,6 +17,7 @@ interface WorkOSContextType {
   signIn: () => void;
   signUp: () => void;
   signOut: () => void;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 const WorkOSContext = createContext<WorkOSContextType | undefined>(undefined);
@@ -52,7 +54,6 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     console.log('Redirecting to WorkOS sign-in...');
     const signInUrl = getAuthKitSignInUrl();
     console.log('Sign-in URL:', signInUrl);
-    // Force full page redirect
     window.location.assign(signInUrl);
   };
 
@@ -60,7 +61,6 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     console.log('Redirecting to WorkOS sign-up...');
     const signUpUrl = getAuthKitSignUpUrl();
     console.log('Sign-up URL:', signUpUrl);
-    // Force full page redirect
     window.location.assign(signUpUrl);
   };
 
@@ -70,12 +70,19 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     localStorage.removeItem('workos_user');
     const signOutUrl = signOutFromAuthKit();
     console.log('Sign-out URL:', signOutUrl);
-    // Force full page redirect
     window.location.assign(signOutUrl);
   };
 
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      const updatedUser = { ...user, ...userData };
+      setUser(updatedUser);
+      localStorage.setItem('workos_user', JSON.stringify(updatedUser));
+    }
+  };
+
   return (
-    <WorkOSContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
+    <WorkOSContext.Provider value={{ user, loading, signIn, signUp, signOut, updateUser }}>
       {children}
     </WorkOSContext.Provider>
   );

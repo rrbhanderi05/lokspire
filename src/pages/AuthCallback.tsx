@@ -27,7 +27,7 @@ const AuthCallback = () => {
           throw new Error(`Authentication error: ${error}`);
         }
 
-        // Check if we have user data directly in URL params (some AuthKit setups)
+        // Check if we have user data directly in URL params
         if (userParam) {
           try {
             const userData = JSON.parse(decodeURIComponent(userParam));
@@ -42,52 +42,29 @@ const AuthCallback = () => {
           }
         }
 
-        if (!code) {
-          // Sometimes WorkOS redirects without code but with success indication
-          // Create a mock user for demonstration
-          console.log('No code found, creating demo user...');
-          const mockUser = {
-            id: 'user_' + Date.now(),
-            email: 'demo@enterprise.com',
-            firstName: 'Demo',
-            lastName: 'User',
-            organizationId: 'org_demo'
-          };
-          
-          localStorage.setItem('workos_user', JSON.stringify(mockUser));
-          setStatus('success');
-          setMessage('Authentication successful! Welcome to Lokspire.');
-          setTimeout(() => {
-            navigate('/');
-            // Force a page reload to update the auth state
-            window.location.reload();
-          }, 2000);
-          return;
-        }
-
-        console.log('WorkOS Authorization code received:', code);
-        
         // Simulate processing time
         await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Create user data (in production, exchange code for actual user data)
+        // Create user data based on the authentication flow
+        const isSignUp = state?.includes('signup') || window.location.pathname.includes('signup');
+        
         const userData = {
           id: 'user_' + Date.now(),
-          email: 'user@enterprise.com',
-          firstName: 'Enterprise',
-          lastName: 'User',
-          organizationId: 'org_' + Date.now()
+          email: isSignUp ? 'newuser@enterprise.com' : 'user@enterprise.com',
+          firstName: isSignUp ? 'New' : 'Enterprise',
+          lastName: isSignUp ? 'User' : 'User',
+          organizationId: 'org_' + Date.now(),
+          profilePicture: undefined
         };
 
         console.log('Storing user data:', userData);
         localStorage.setItem('workos_user', JSON.stringify(userData));
         
         setStatus('success');
-        setMessage('Authentication successful! Welcome to Lokspire.');
+        setMessage(isSignUp ? 'Account created successfully! Welcome to Lokspire.' : 'Sign in successful! Welcome back.');
         
         setTimeout(() => {
           navigate('/');
-          // Force a page reload to update the auth state
           window.location.reload();
         }, 2000);
         
