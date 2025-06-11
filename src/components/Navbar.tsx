@@ -88,7 +88,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Button 
-                onClick={() => signIn()}
+                onClick={signIn}
                 className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
               >
                 <Building2 className="w-4 h-4 mr-2" />

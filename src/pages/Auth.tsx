@@ -1,23 +1,12 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useWorkOS } from '@/contexts/WorkOSContext';
-import { Building2, Users, ArrowRight } from 'lucide-react';
+import { Building2, Users, ArrowRight, UserPlus } from 'lucide-react';
 
 const Auth = () => {
-  const [organizationId, setOrganizationId] = useState('');
-  const { signIn, loading } = useWorkOS();
-
-  const handleSSO = () => {
-    signIn(organizationId);
-  };
-
-  const handleQuickSSO = () => {
-    signIn(); // Login without specific organization
-  };
+  const { signIn, signUp, loading } = useWorkOS();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center p-4">
@@ -32,40 +21,26 @@ const Auth = () => {
             Welcome to Lokspire
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Sign in with your organization account
+            Sign in with your enterprise account or create a new one
           </p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-xl text-center">Enterprise Sign In</CardTitle>
+            <CardTitle className="text-xl text-center">Enterprise Authentication</CardTitle>
             <CardDescription className="text-center">
-              Access your organization's Lokspire portal
+              Powered by WorkOS AuthKit for secure enterprise authentication
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="organization">Organization ID (Optional)</Label>
-              <Input
-                id="organization"
-                placeholder="org_12345..."
-                value={organizationId}
-                onChange={(e) => setOrganizationId(e.target.value)}
-                className="transition-all duration-200 focus:ring-2 focus:ring-blue-500"
-              />
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Enter your organization ID for direct SSO access
-              </p>
-            </div>
-
             <div className="space-y-3">
               <Button 
-                onClick={handleSSO}
+                onClick={signIn}
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
               >
                 <Building2 className="w-4 h-4 mr-2" />
-                Sign in with SSO
+                Sign In
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
 
@@ -79,23 +54,29 @@ const Auth = () => {
               </div>
 
               <Button 
-                onClick={handleQuickSSO}
+                onClick={signUp}
                 disabled={loading}
                 variant="outline"
                 className="w-full border-2 border-gray-200 hover:border-blue-300 hover:bg-blue-50 dark:border-gray-600 dark:hover:border-blue-400 dark:hover:bg-blue-950 font-semibold py-3 rounded-lg transition-all duration-300"
               >
-                <Users className="w-4 h-4 mr-2" />
-                Quick Access
+                <UserPlus className="w-4 h-4 mr-2" />
+                Create Account
               </Button>
             </div>
 
             <div className="text-center pt-4">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Powered by WorkOS for secure enterprise authentication
+                Secure enterprise authentication with SSO, MFA, and more
               </p>
             </div>
           </CardContent>
         </Card>
+
+        <div className="text-center">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            By continuing, you agree to our Terms of Service and Privacy Policy
+          </p>
+        </div>
       </div>
     </div>
   );

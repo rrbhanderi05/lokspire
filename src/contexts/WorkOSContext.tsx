@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { getAuthKitSignInUrl, getAuthKitSignUpUrl, signOutFromAuthKit } from '@/lib/workos';
 
 interface User {
   id: string;
@@ -12,7 +13,8 @@ interface User {
 interface WorkOSContextType {
   user: User | null;
   loading: boolean;
-  signIn: (organizationId?: string) => void;
+  signIn: () => void;
+  signUp: () => void;
   signOut: () => void;
 }
 
@@ -34,35 +36,35 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     // Check for stored user session
     const storedUser = localStorage.getItem('workos_user');
     if (storedUser) {
-      setUser(JSON.parse(storedUser));
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('workos_user');
+      }
     }
     setLoading(false);
   }, []);
 
-  const signIn = (organizationId?: string) => {
-    const params = new URLSearchParams({
-      client_id: 'client_01JXBZ26B2FV5HNYCRQ5K08D96',
-      redirect_uri: `${window.location.origin}/auth/callback`,
-      response_type: 'code',
-      state: Math.random().toString(36).substring(7),
-    });
+  const signIn = () => {
+    const signInUrl = getAuthKitSignInUrl();
+    window.location.href = signInUrl;
+  };
 
-    if (organizationId) {
-      params.append('organization_id', organizationId);
-    }
-
-    const authUrl = `https://api.workos.com/sso/authorize?${params.toString()}`;
-    window.location.href = authUrl;
+  const signUp = () => {
+    const signUpUrl = getAuthKitSignUpUrl();
+    window.location.href = signUpUrl;
   };
 
   const signOut = () => {
     setUser(null);
     localStorage.removeItem('workos_user');
-    window.location.href = '/';
+    const signOutUrl = signOutFromAuthKit();
+    window.location.href = signOutUrl;
   };
 
   return (
-    <WorkOSContext.Provider value={{ user, loading, signIn, signOut }}>
+    <WorkOSContext.Provider value={{ user, loading, signIn, signUp, signOut }}>
       {children}
     </WorkOSContext.Provider>
   );

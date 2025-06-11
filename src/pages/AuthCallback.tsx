@@ -6,7 +6,7 @@ import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 const AuthCallback = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
-  const [message, setMessage] = useState('Processing your login...');
+  const [message, setMessage] = useState('Processing your authentication...');
 
   useEffect(() => {
     const handleCallback = async () => {
@@ -14,41 +14,46 @@ const AuthCallback = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const code = urlParams.get('code');
         const state = urlParams.get('state');
+        const error = urlParams.get('error');
 
-        if (!code) {
-          throw new Error('No authorization code received');
+        if (error) {
+          throw new Error(`Authentication error: ${error}`);
         }
 
-        // In a real app, you'd send this to your backend to exchange for user info
-        // For now, we'll simulate a successful login
-        console.log('Authorization code:', code);
+        if (!code) {
+          throw new Error('No authorization code received from WorkOS');
+        }
+
+        console.log('WorkOS Authorization code:', code);
         console.log('State:', state);
 
-        // Simulate API call delay
+        // Simulate API call to exchange code for user info
+        // In production, this would be done on your backend
         await new Promise(resolve => setTimeout(resolve, 2000));
 
-        // Mock user data - in production, this would come from WorkOS
+        // Mock user data - in production, this would come from WorkOS API
         const mockUser = {
-          id: 'user_123',
-          email: 'user@example.com',
-          firstName: 'John',
-          lastName: 'Doe',
-          organizationId: 'org_123'
+          id: 'user_' + Math.random().toString(36).substr(2, 9),
+          email: 'user@enterprise.com',
+          firstName: 'Enterprise',
+          lastName: 'User',
+          organizationId: 'org_' + Math.random().toString(36).substr(2, 9)
         };
 
         localStorage.setItem('workos_user', JSON.stringify(mockUser));
         
         setStatus('success');
-        setMessage('Login successful! Redirecting...');
+        setMessage('Authentication successful! Welcome to Lokspire.');
         
         setTimeout(() => {
           navigate('/');
-        }, 1500);
+          window.location.reload(); // Refresh to update auth state
+        }, 2000);
         
       } catch (error) {
-        console.error('Auth callback error:', error);
+        console.error('AuthKit callback error:', error);
         setStatus('error');
-        setMessage('Login failed. Please try again.');
+        setMessage(`Authentication failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
         
         setTimeout(() => {
           navigate('/auth');
@@ -81,14 +86,20 @@ const AuthCallback = () => {
             )}
             
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-              {status === 'loading' && 'Signing you in...'}
-              {status === 'success' && 'Welcome back!'}
-              {status === 'error' && 'Oops!'}
+              {status === 'loading' && 'Authenticating...'}
+              {status === 'success' && 'Success!'}
+              {status === 'error' && 'Authentication Failed'}
             </h2>
             
-            <p className="text-gray-600 dark:text-gray-400">
+            <p className="text-gray-600 dark:text-gray-400 text-center">
               {message}
             </p>
+
+            {status === 'loading' && (
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Please wait while we verify your credentials with WorkOS AuthKit
+              </div>
+            )}
           </div>
         </div>
       </div>

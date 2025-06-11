@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Legacy compatibility - redirect to WorkOS auth
+  // Legacy compatibility - redirect to WorkOS AuthKit
   const signInWithGoogle = () => {
     window.location.href = '/auth';
   };

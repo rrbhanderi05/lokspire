@@ -10,25 +10,35 @@ export const workos = new WorkOS(WORKOS_API_KEY);
 export const workosConfig = {
   clientId: WORKOS_CLIENT_ID,
   apiKey: WORKOS_API_KEY,
-  redirectUri: `${window.location.origin}/auth/callback`,
+  authKitUrl: 'https://upright-dragon-18-staging.authkit.app',
 };
 
-// Helper function to get authorization URL for SSO
-export const getAuthorizationUrl = (organizationId?: string, connectionId?: string) => {
+// Helper function to get AuthKit sign-in URL
+export const getAuthKitSignInUrl = (returnTo?: string) => {
+  const baseUrl = `${workosConfig.authKitUrl}/sign-in`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    redirect_uri: workosConfig.redirectUri,
-    response_type: 'code',
-    state: Math.random().toString(36).substring(7),
+    return_to: returnTo || `${window.location.origin}/auth/callback`,
   });
+  return `${baseUrl}?${params.toString()}`;
+};
 
-  if (organizationId) {
-    params.append('organization_id', organizationId);
-  }
+// Helper function to get AuthKit sign-up URL
+export const getAuthKitSignUpUrl = (returnTo?: string) => {
+  const baseUrl = `${workosConfig.authKitUrl}/sign-up`;
+  const params = new URLSearchParams({
+    client_id: workosConfig.clientId,
+    return_to: returnTo || `${window.location.origin}/auth/callback`,
+  });
+  return `${baseUrl}?${params.toString()}`;
+};
 
-  if (connectionId) {
-    params.append('connection_id', connectionId);
-  }
-
-  return `https://api.workos.com/sso/authorize?${params.toString()}`;
+// Helper function to sign out
+export const signOutFromAuthKit = () => {
+  const baseUrl = `${workosConfig.authKitUrl}/sign-out`;
+  const params = new URLSearchParams({
+    client_id: workosConfig.clientId,
+    return_to: window.location.origin,
+  });
+  return `${baseUrl}?${params.toString()}`;
 };
