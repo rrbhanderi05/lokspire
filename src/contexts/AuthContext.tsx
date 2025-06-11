@@ -1,13 +1,18 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, onAuthStateChanged, signInWithPopup, signOut, signInWithRedirect, getRedirectResult } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+
+interface User {
+  id: string;
+  email: string;
+  displayName?: string;
+  photoURL?: string;
+}
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
-  signInWithGoogle: () => Promise<void>;
-  logout: () => Promise<void>;
+  signInWithGoogle: () => void;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,58 +25,40 @@ export const useAuth = () => {
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+
+  // Legacy compatibility - redirect to WorkOS auth
+  const signInWithGoogle = () => {
+    window.location.href = '/auth';
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('workos_user');
+    window.location.href = '/';
+  };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-      setLoading(false);
-    });
-
-    // Check for redirect result on page load
-    getRedirectResult(auth).then((result) => {
-      if (result?.user) {
-        setUser(result.user);
-      }
-    }).catch((error) => {
-      console.error('Redirect sign-in error:', error);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const signInWithGoogle = async () => {
-    try {
-      // Configure provider settings
-      googleProvider.setCustomParameters({
-        prompt: 'select_account'
-      });
-      
-      // Try popup first, fallback to redirect if it fails
+    // Check for WorkOS user in localStorage for compatibility
+    const storedUser = localStorage.getItem('workos_user');
+    if (storedUser) {
       try {
-        await signInWithPopup(auth, googleProvider);
-      } catch (popupError: any) {
-        if (popupError.code === 'auth/popup-blocked' || popupError.code === 'auth/popup-closed-by-user') {
-          // Fallback to redirect
-          await signInWithRedirect(auth, googleProvider);
-        } else {
-          throw popupError;
-        }
+        const workosUser = JSON.parse(storedUser);
+        setUser({
+          id: workosUser.id,
+          email: workosUser.email,
+          displayName: workosUser.firstName ? `${workosUser.firstName} ${workosUser.lastName || ''}`.trim() : undefined,
+          photoURL: undefined
+        });
+      } catch (error) {
+        console.error('Error parsing stored user:', error);
+        localStorage.removeItem('workos_user');
       }
-    } catch (error) {
-      console.error('Error signing in with Google:', error);
     }
-  };
-
-  const logout = async () => {
-    try {
-      await signOut(auth);
-    } catch (error) {
-      console.error('Error signing out:', error);
-    }
-  };
+    setLoading(false);
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, loading, signInWithGoogle, logout }}>

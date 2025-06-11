@@ -5,21 +5,13 @@ import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, Use
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useAuth } from '@/contexts/AuthContext';
 import { useWorkOS } from '@/contexts/WorkOSContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { user: firebaseUser, signInWithGoogle, logout: firebaseLogout, loading: firebaseLoading } = useAuth();
-  const { user: workosUser, signIn: workosSignIn, signOut: workosSignOut, loading: workosLoading } = useWorkOS();
-
-  // Use WorkOS user if available, otherwise fall back to Firebase
-  const user = workosUser || firebaseUser;
-  const loading = workosLoading || firebaseLoading;
-  const signIn = workosUser ? workosSignIn : signInWithGoogle;
-  const logout = workosUser ? workosSignOut : firebaseLogout;
+  const { user, signIn, signOut, loading } = useWorkOS();
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
@@ -73,25 +65,19 @@ const Navbar = () => {
             ) : user ? (
               <div className="flex items-center space-x-4">
                 <div className="relative group">
-                  {(user as any).photoURL ? (
-                    <img 
-                      src={(user as any).photoURL} 
-                      alt={(user as any).displayName || user.email || 'User'} 
-                      className="w-12 h-12 rounded-full border-3 border-gradient-to-r from-[#007acc] to-[#00bfa6] shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
-                      {workosUser ? (
-                        <Building2 className="w-6 h-6 text-white" />
-                      ) : (
-                        <User className="w-6 h-6 text-white" />
-                      )}
-                    </div>
-                  )}
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300 group-hover:scale-110">
+                    <Building2 className="w-6 h-6 text-white" />
+                  </div>
                   <div className="absolute -inset-1 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full opacity-75 group-hover:opacity-100 blur transition-all duration-300"></div>
                 </div>
+                <div className="text-sm">
+                  <div className="font-semibold text-gray-900 dark:text-white">
+                    {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">Enterprise User</div>
+                </div>
                 <Button
-                  onClick={logout}
+                  onClick={signOut}
                   variant="ghost"
                   size="sm"
                   className="text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-xl transition-all duration-300"
@@ -101,21 +87,13 @@ const Navbar = () => {
                 </Button>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
-                <Button 
-                  onClick={() => workosSignIn()}
-                  className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
-                >
-                  <Building2 className="w-4 h-4 mr-2" />
-                  Enterprise
-                </Button>
-                <Button 
-                  onClick={signInWithGoogle}
-                  className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
-                >
-                  Sign In
-                </Button>
-              </div>
+              <Button 
+                onClick={() => signIn()}
+                className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
+              >
+                <Building2 className="w-4 h-4 mr-2" />
+                Enterprise Sign In
+              </Button>
             )}
 
             <Button className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6">
@@ -176,32 +154,20 @@ const Navbar = () => {
                   ) : user ? (
                     <div className="pt-4 space-y-4 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900 rounded-2xl">
-                        {(user as any).photoURL ? (
-                          <img 
-                            src={(user as any).photoURL} 
-                            alt={(user as any).displayName || user.email || 'User'} 
-                            className="w-10 h-10 rounded-full mr-4 border-2 border-white shadow-lg"
-                          />
-                        ) : (
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center mr-4 shadow-lg">
-                            {workosUser ? (
-                              <Building2 className="w-5 h-5 text-white" />
-                            ) : (
-                              <User className="w-5 h-5 text-white" />
-                            )}
-                          </div>
-                        )}
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] flex items-center justify-center mr-4 shadow-lg">
+                          <Building2 className="w-5 h-5 text-white" />
+                        </div>
                         <div>
                           <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {(user as any).displayName || (user as any).firstName || user.email || 'User'}
+                            {user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : user.email}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            {workosUser ? 'Enterprise User' : 'Signed In'}
+                            Enterprise User
                           </div>
                         </div>
                       </div>
                       <Button
-                        onClick={logout}
+                        onClick={signOut}
                         variant="ghost"
                         className="w-full justify-start px-6 py-4 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-500"
                       >
@@ -213,19 +179,13 @@ const Navbar = () => {
                     <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
                       <Button 
                         onClick={() => {
-                          workosSignIn();
+                          signIn();
                           setIsOpen(false);
                         }}
-                        className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 shadow-xl rounded-2xl py-4 text-white font-semibold"
+                        className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4 text-white font-semibold"
                       >
                         <Building2 className="w-5 h-5 mr-2" />
                         Enterprise Sign In
-                      </Button>
-                      <Button 
-                        onClick={signInWithGoogle}
-                        className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4 text-white font-semibold"
-                      >
-                        Sign In with Google
                       </Button>
                     </div>
                   )}
