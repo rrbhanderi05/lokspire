@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useWorkOS } from '@/contexts/WorkOSContext';
-import { Building2, Users, ArrowRight, UserPlus } from 'lucide-react';
+import { LogIn, ArrowRight, UserPlus } from 'lucide-react';
 
 const Auth = () => {
   const { signIn, signUp, loading } = useWorkOS();
@@ -21,15 +21,15 @@ const Auth = () => {
             Welcome to Lokspire
           </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Sign in with your enterprise account or create a new one
+            Sign in to your account or create a new one
           </p>
         </div>
 
         <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-xl text-center">Enterprise Authentication</CardTitle>
+            <CardTitle className="text-xl text-center">Authentication</CardTitle>
             <CardDescription className="text-center">
-              Powered by WorkOS AuthKit for secure enterprise authentication
+              Secure authentication powered by WorkOS
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -39,7 +39,7 @@ const Auth = () => {
                 disabled={loading}
                 className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl"
               >
-                <Building2 className="w-4 h-4 mr-2" />
+                <LogIn className="w-4 h-4 mr-2" />
                 Sign In
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -66,7 +66,7 @@ const Auth = () => {
 
             <div className="text-center pt-4">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Secure enterprise authentication with SSO, MFA, and more
+                Secure authentication with SSO support
               </p>
             </div>
           </CardContent>

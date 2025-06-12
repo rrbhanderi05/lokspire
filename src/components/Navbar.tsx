@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User, Building2 } from 'lucide-react';
+import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -90,7 +90,7 @@ const Navbar = () => {
                     <div className="font-semibold text-gray-900 dark:text-white">
                       {getDisplayName()}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">Enterprise User</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">View Profile</div>
                   </div>
                 </Link>
                 <Button
@@ -108,8 +108,8 @@ const Navbar = () => {
                 onClick={signIn}
                 className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
               >
-                <Building2 className="w-4 h-4 mr-2" />
-                Enterprise Sign In
+                <User className="w-4 h-4 mr-2" />
+                Sign In
               </Button>
             )}
 
@@ -208,8 +208,8 @@ const Navbar = () => {
                         }}
                         className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4 text-white font-semibold"
                       >
-                        <Building2 className="w-5 h-5 mr-2" />
-                        Enterprise Sign In
+                        <User className="w-5 h-5 mr-2" />
+                        Sign In
                       </Button>
                     </div>
                   )}

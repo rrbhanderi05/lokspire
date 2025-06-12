@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useWorkOS } from '@/contexts/WorkOSContext';
-import { User, Camera, Save, Building2 } from 'lucide-react';
+import { User, Camera, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const UserProfile = () => {
@@ -86,9 +86,8 @@ const UserProfile = () => {
           </Button>
         </div>
         <CardTitle className="mt-4">{getDisplayName()}</CardTitle>
-        <div className="flex items-center justify-center text-sm text-gray-500 dark:text-gray-400">
-          <Building2 className="w-4 h-4 mr-1" />
-          Enterprise User
+        <div className="text-sm text-gray-500 dark:text-gray-400">
+          Lokspire User
         </div>
       </CardHeader>
       

@@ -78,6 +78,7 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       const updatedUser = { ...user, ...userData };
       setUser(updatedUser);
       localStorage.setItem('workos_user', JSON.stringify(updatedUser));
+      console.log('User updated:', updatedUser);
     }
   };
 

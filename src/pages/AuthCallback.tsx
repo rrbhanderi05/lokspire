@@ -35,38 +35,47 @@ const AuthCallback = () => {
             localStorage.setItem('workos_user', JSON.stringify(userData));
             setStatus('success');
             setMessage('Authentication successful! Welcome to Lokspire.');
-            setTimeout(() => navigate('/'), 2000);
+            setTimeout(() => {
+              navigate('/');
+              window.location.reload();
+            }, 2000);
             return;
           } catch (parseError) {
             console.log('Could not parse user data from URL, continuing with code flow');
           }
         }
 
-        // Simulate processing time
-        await new Promise(resolve => setTimeout(resolve, 1500));
+        // If we have a code, the authentication was successful
+        if (code) {
+          // Simulate processing time
+          await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Create user data based on the authentication flow
-        const isSignUp = state?.includes('signup') || window.location.pathname.includes('signup');
-        
-        const userData = {
-          id: 'user_' + Date.now(),
-          email: isSignUp ? 'newuser@enterprise.com' : 'user@enterprise.com',
-          firstName: isSignUp ? 'New' : 'Enterprise',
-          lastName: isSignUp ? 'User' : 'User',
-          organizationId: 'org_' + Date.now(),
-          profilePicture: undefined
-        };
+          // Determine if it's signup or signin based on state
+          const isSignUp = state?.includes('signup') || window.location.pathname.includes('signup');
+          
+          // Create mock user data for demonstration
+          const userData = {
+            id: 'user_' + Date.now(),
+            email: isSignUp ? 'newuser@example.com' : 'user@example.com',
+            firstName: isSignUp ? 'New' : 'John',
+            lastName: isSignUp ? 'User' : 'Doe',
+            organizationId: 'org_' + Date.now(),
+            profilePicture: undefined
+          };
 
-        console.log('Storing user data:', userData);
-        localStorage.setItem('workos_user', JSON.stringify(userData));
-        
-        setStatus('success');
-        setMessage(isSignUp ? 'Account created successfully! Welcome to Lokspire.' : 'Sign in successful! Welcome back.');
-        
-        setTimeout(() => {
-          navigate('/');
-          window.location.reload();
-        }, 2000);
+          console.log('Storing user data:', userData);
+          localStorage.setItem('workos_user', JSON.stringify(userData));
+          
+          setStatus('success');
+          setMessage(isSignUp ? 'Account created successfully! Welcome to Lokspire.' : 'Sign in successful! Welcome back.');
+          
+          setTimeout(() => {
+            navigate('/');
+            window.location.reload();
+          }, 2000);
+        } else {
+          throw new Error('No authentication code received');
+        }
         
       } catch (error) {
         console.error('AuthKit callback error:', error);
@@ -115,7 +124,7 @@ const AuthCallback = () => {
 
             {status === 'loading' && (
               <div className="text-sm text-gray-500 dark:text-gray-400">
-                Please wait while we verify your credentials with WorkOS AuthKit
+                Please wait while we verify your credentials
               </div>
             )}
             
