@@ -19,41 +19,21 @@ const AuthCallback = () => {
         const code = urlParams.get('code');
         const state = urlParams.get('state');
         const error = urlParams.get('error');
-        const userParam = urlParams.get('user');
 
-        console.log('Extracted params:', { code, state, error, userParam });
+        console.log('Extracted params:', { code, state, error });
 
         if (error) {
           throw new Error(`Authentication error: ${error}`);
         }
 
-        // Check if we have user data directly in URL params
-        if (userParam) {
-          try {
-            const userData = JSON.parse(decodeURIComponent(userParam));
-            console.log('User data from URL:', userData);
-            localStorage.setItem('workos_user', JSON.stringify(userData));
-            setStatus('success');
-            setMessage('Authentication successful! Welcome to Lokspire.');
-            setTimeout(() => {
-              navigate('/');
-              window.location.reload();
-            }, 2000);
-            return;
-          } catch (parseError) {
-            console.log('Could not parse user data from URL, continuing with code flow');
-          }
-        }
-
-        // If we have a code, the authentication was successful
         if (code) {
-          // Simulate processing time
+          console.log('Authentication successful, code received:', code);
+          
+          // Simulate processing
           await new Promise(resolve => setTimeout(resolve, 1500));
 
-          // Determine if it's signup or signin based on state
-          const isSignUp = state?.includes('signup') || window.location.pathname.includes('signup');
-          
-          // Create mock user data for demonstration
+          // Create user data based on the auth flow
+          const isSignUp = state?.includes('signup');
           const userData = {
             id: 'user_' + Date.now(),
             email: isSignUp ? 'newuser@example.com' : 'user@example.com',
@@ -74,7 +54,7 @@ const AuthCallback = () => {
             window.location.reload();
           }, 2000);
         } else {
-          throw new Error('No authentication code received');
+          throw new Error('No authentication code received from WorkOS');
         }
         
       } catch (error) {

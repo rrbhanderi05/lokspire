@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Upload, X, Phone, Camera, Lock } from 'lucide-react';
-import { useAuth } from '@/contexts/AuthContext';
+import { useWorkOS } from '@/contexts/WorkOSContext';
 
 const categories = [
   'Clothes & Fashion',
@@ -41,7 +41,7 @@ const areas = [
 ];
 
 const PostListing = () => {
-  const { user, signInWithGoogle } = useAuth();
+  const { user, signIn, loading } = useWorkOS();
   const [formData, setFormData] = useState({
     ownerName: '',
     title: '',
@@ -72,13 +72,14 @@ const PostListing = () => {
                   Sign In Required
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  Please sign in with your Google account to post your business listing.
+                  Please sign in to post your business listing on Lokspire.
                 </p>
                 <Button 
-                  onClick={signInWithGoogle}
+                  onClick={signIn}
+                  disabled={loading}
                   className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] text-white py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  Sign In with Google
+                  {loading ? 'Signing In...' : 'Sign In to Post'}
                 </Button>
               </CardContent>
             </Card>
@@ -167,7 +168,7 @@ const PostListing = () => {
               Post Your Business Listing
             </h1>
             <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Share your home-based business with the Amreli community
+              Welcome {user.firstName || user.email}! Share your home-based business with the Amreli community
             </p>
           </div>
 

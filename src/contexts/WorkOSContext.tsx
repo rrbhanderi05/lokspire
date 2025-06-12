@@ -36,22 +36,28 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   useEffect(() => {
     // Check for stored user session
-    const storedUser = localStorage.getItem('workos_user');
-    if (storedUser) {
+    const checkStoredUser = () => {
       try {
-        const userData = JSON.parse(storedUser);
-        console.log('Found stored user:', userData);
-        setUser(userData);
+        const storedUser = localStorage.getItem('workos_user');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          console.log('Found stored user:', userData);
+          setUser(userData);
+        }
       } catch (error) {
         console.error('Error parsing stored user:', error);
         localStorage.removeItem('workos_user');
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    checkStoredUser();
   }, []);
 
   const signIn = () => {
     console.log('Redirecting to WorkOS sign-in...');
+    setLoading(true);
     const signInUrl = getAuthKitSignInUrl();
     console.log('Sign-in URL:', signInUrl);
     window.location.assign(signInUrl);
@@ -59,6 +65,7 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const signUp = () => {
     console.log('Redirecting to WorkOS sign-up...');
+    setLoading(true);
     const signUpUrl = getAuthKitSignUpUrl();
     console.log('Sign-up URL:', signUpUrl);
     window.location.assign(signUpUrl);

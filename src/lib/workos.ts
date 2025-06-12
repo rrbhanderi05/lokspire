@@ -10,32 +10,33 @@ export const workosConfig = {
 
 // Helper function to get AuthKit sign-in URL
 export const getAuthKitSignInUrl = (returnTo?: string) => {
-  const baseUrl = `${workosConfig.authKitUrl}/sign-in`;
   const redirectTo = returnTo || `${window.location.origin}/auth/callback`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    return_to: redirectTo,
+    redirect_uri: redirectTo,
+    response_type: 'code',
+    state: 'signin'
   });
-  return `${baseUrl}?${params.toString()}`;
+  return `${workosConfig.authKitUrl}/sso/authorize?${params.toString()}`;
 };
 
 // Helper function to get AuthKit sign-up URL  
 export const getAuthKitSignUpUrl = (returnTo?: string) => {
-  const baseUrl = `${workosConfig.authKitUrl}/sign-up`;
   const redirectTo = returnTo || `${window.location.origin}/auth/callback`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    return_to: redirectTo,
+    redirect_uri: redirectTo,
+    response_type: 'code',
+    state: 'signup'
   });
-  return `${baseUrl}?${params.toString()}`;
+  return `${workosConfig.authKitUrl}/sso/authorize?${params.toString()}`;
 };
 
 // Helper function to sign out
 export const signOutFromAuthKit = () => {
-  const baseUrl = `${workosConfig.authKitUrl}/sign-out`;
   const params = new URLSearchParams({
     client_id: workosConfig.clientId,
-    return_to: window.location.origin,
+    redirect_uri: window.location.origin,
   });
-  return `${baseUrl}?${params.toString()}`;
+  return `${workosConfig.authKitUrl}/sso/logout?${params.toString()}`;
 };
