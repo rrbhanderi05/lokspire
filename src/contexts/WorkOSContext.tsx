@@ -25,6 +25,7 @@ const WorkOSContext = createContext<WorkOSContextType | undefined>(undefined);
 export const useWorkOS = () => {
   const context = useContext(WorkOSContext);
   if (!context) {
+    console.error('useWorkOS hook called outside of WorkOSProvider! Component stack:', new Error().stack);
     throw new Error('useWorkOS must be used within a WorkOSProvider');
   }
   return context;
@@ -33,6 +34,8 @@ export const useWorkOS = () => {
 export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+
+  console.log('WorkOSProvider rendering with user:', user);
 
   useEffect(() => {
     // Check for stored user session
@@ -43,6 +46,8 @@ export const WorkOSProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           const userData = JSON.parse(storedUser);
           console.log('Found stored user:', userData);
           setUser(userData);
+        } else {
+          console.log('No stored user found');
         }
       } catch (error) {
         console.error('Error parsing stored user:', error);
