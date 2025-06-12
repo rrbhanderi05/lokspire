@@ -4,15 +4,14 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import { useTheme } from '@/contexts/ThemeContext';
-import { useWorkOS } from '@/contexts/WorkOSContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
-  const { user, signIn, signOut, loading } = useWorkOS();
+  const { user } = useUser();
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
@@ -21,20 +20,6 @@ const Navbar = () => {
     { name: 'Sell', path: '/post', icon: Plus },
     { name: 'About', path: '/about', icon: Info },
   ];
-
-  const getInitials = () => {
-    if (user?.firstName || user?.lastName) {
-      return `${user.firstName?.charAt(0) || ''}${user.lastName?.charAt(0) || ''}`.toUpperCase();
-    }
-    return user?.email?.charAt(0).toUpperCase() || 'U';
-  };
-
-  const getDisplayName = () => {
-    if (user?.firstName || user?.lastName) {
-      return `${user.firstName || ''} ${user.lastName || ''}`.trim();
-    }
-    return user?.email || 'User';
-  };
 
   return (
     <nav className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-2xl sticky top-0 z-50 border-b border-gray-200/50 dark:border-gray-700/50">
@@ -75,43 +60,35 @@ const Navbar = () => {
               {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </Button>
 
-            {loading ? (
-              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
-            ) : user ? (
+            <SignedOut>
+              <SignInButton mode="modal">
+                <Button className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold">
+                  <User className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              </SignInButton>
+            </SignedOut>
+
+            <SignedIn>
               <div className="flex items-center space-x-4">
                 <Link to="/profile" className="flex items-center space-x-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-xl p-2 transition-colors">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={user.profilePicture} alt="Profile" />
-                    <AvatarFallback className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white text-sm font-bold">
-                      {getInitials()}
-                    </AvatarFallback>
-                  </Avatar>
                   <div className="text-sm">
                     <div className="font-semibold text-gray-900 dark:text-white">
-                      {getDisplayName()}
+                      {user?.fullName || user?.emailAddresses[0]?.emailAddress}
                     </div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">View Profile</div>
                   </div>
                 </Link>
-                <Button
-                  onClick={signOut}
-                  variant="ghost"
-                  size="sm"
-                  className="text-gray-600 dark:text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-xl transition-all duration-300"
-                >
-                  <LogOut className="w-4 h-4 mr-1" />
-                  Sign Out
-                </Button>
+                <UserButton 
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      avatarBox: "w-10 h-10"
+                    }
+                  }}
+                />
               </div>
-            ) : (
-              <Button 
-                onClick={signIn}
-                className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6 text-white font-semibold"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Sign In
-              </Button>
-            )}
+            </SignedIn>
 
             <Button className="bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] hover:from-[#005f73] hover:via-[#007acc] hover:to-[#005f73] shadow-xl hover:shadow-2xl transition-all duration-500 rounded-2xl px-6">
               <Phone className="w-4 h-4 mr-2" />
@@ -164,55 +141,49 @@ const Navbar = () => {
                     </Link>
                   ))}
                   
-                  {loading ? (
-                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                      <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-2xl animate-pulse"></div>
+                  <SignedOut>
+                    <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
+                      <SignInButton mode="modal">
+                        <Button className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4 text-white font-semibold">
+                          <User className="w-5 h-5 mr-2" />
+                          Sign In
+                        </Button>
+                      </SignInButton>
                     </div>
-                  ) : user ? (
+                  </SignedOut>
+
+                  <SignedIn>
                     <div className="pt-4 space-y-4 border-t border-gray-200 dark:border-gray-700">
                       <Link
                         to="/profile"
                         onClick={() => setIsOpen(false)}
                         className="flex items-center px-6 py-3 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-800 dark:to-blue-900 rounded-2xl hover:from-blue-50 hover:to-blue-100 dark:hover:from-blue-900 dark:hover:to-blue-800 transition-colors"
                       >
-                        <Avatar className="w-10 h-10 mr-4">
-                          <AvatarImage src={user.profilePicture} alt="Profile" />
-                          <AvatarFallback className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] text-white text-sm font-bold">
-                            {getInitials()}
-                          </AvatarFallback>
-                        </Avatar>
+                        <div className="w-10 h-10 mr-4 bg-gradient-to-r from-[#007acc] to-[#00bfa6] rounded-full flex items-center justify-center text-white font-bold">
+                          {user?.fullName?.charAt(0) || user?.emailAddresses[0]?.emailAddress?.charAt(0) || 'U'}
+                        </div>
                         <div>
                           <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                            {getDisplayName()}
+                            {user?.fullName || user?.emailAddresses[0]?.emailAddress}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
                             View Profile
                           </div>
                         </div>
                       </Link>
-                      <Button
-                        onClick={signOut}
-                        variant="ghost"
-                        className="w-full justify-start px-6 py-4 rounded-2xl hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-500"
-                      >
-                        <LogOut className="w-5 h-5 mr-4" />
-                        Sign Out
-                      </Button>
+                      <div className="px-6">
+                        <UserButton 
+                          afterSignOutUrl="/"
+                          appearance={{
+                            elements: {
+                              rootBox: "w-full",
+                              card: "w-full"
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
-                  ) : (
-                    <div className="pt-4 space-y-3 border-t border-gray-200 dark:border-gray-700">
-                      <Button 
-                        onClick={() => {
-                          signIn();
-                          setIsOpen(false);
-                        }}
-                        className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4 text-white font-semibold"
-                      >
-                        <User className="w-5 h-5 mr-2" />
-                        Sign In
-                      </Button>
-                    </div>
-                  )}
+                  </SignedIn>
                   
                   <div className="pt-2">
                     <Button className="w-full bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl rounded-2xl py-4">
