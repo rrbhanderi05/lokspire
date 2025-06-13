@@ -82,10 +82,6 @@ const Footer = () => {
                 <span className="text-gray-300">Amreli, Gujarat</span>
               </div>
               <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2 text-[#00bfa6]" />
-                <span className="text-gray-300">+91 98765 43210</span>
-              </div>
-              <div className="flex items-center">
                 <Mail className="w-4 h-4 mr-2 text-[#00bfa6]" />
                 <span className="text-gray-300">hello@lokspire.com</span>
               </div>
