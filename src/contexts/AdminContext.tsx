@@ -30,7 +30,8 @@ export const useAdmin = () => {
 const ADMIN_EMAILS = [
   'admin@lokspire.com',
   'rushikeshpatel05@gmail.com',
-  'shravytech@proton.me'
+  'shravytech@proton.me',
+  'rrbhanderi05@gmail.com'
 ];
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
