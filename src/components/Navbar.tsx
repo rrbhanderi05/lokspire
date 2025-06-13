@@ -1,17 +1,18 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User } from 'lucide-react';
+import { Menu, X, Phone, Moon, Sun, LogOut, Home, List, Grid3X3, Plus, Info, User, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useAdmin } from '@/contexts/AdminContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { user } = useUser();
+  const { isAdmin } = useAdmin();
 
   const navItems = [
     { name: 'Home', path: '/', icon: Home },
@@ -20,6 +21,11 @@ const Navbar = () => {
     { name: 'Sell', path: '/post', icon: Plus },
     { name: 'About', path: '/about', icon: Info },
   ];
+
+  // Add admin link if user is admin
+  if (isAdmin) {
+    navItems.push({ name: 'Admin', path: '/admin', icon: Shield });
+  }
 
   return (
     <nav className="bg-white/95 dark:bg-gray-950/95 backdrop-blur-xl shadow-2xl sticky top-0 z-50 border-b border-gray-200/50 dark:border-gray-700/50">
@@ -45,9 +51,12 @@ const Navbar = () => {
                   location.pathname === item.path
                     ? 'text-white bg-gradient-to-r from-[#007acc] via-[#00bfa6] to-[#007acc] shadow-xl shadow-blue-500/25'
                     : 'text-gray-700 dark:text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-[#007acc] hover:to-[#00bfa6] hover:shadow-lg hover:shadow-blue-500/20'
-                }`}
+                } ${item.name === 'Admin' ? 'border border-orange-300 dark:border-orange-600' : ''}`}
               >
-                <span className="relative z-10">{item.name}</span>
+                <span className="relative z-10 flex items-center">
+                  {item.name === 'Admin' && <Shield className="w-4 h-4 mr-1" />}
+                  {item.name}
+                </span>
               </Link>
             ))}
             
@@ -76,7 +85,9 @@ const Navbar = () => {
                     <div className="font-semibold text-gray-900 dark:text-white">
                       {user?.fullName || user?.emailAddresses[0]?.emailAddress}
                     </div>
-                    <div className="text-xs text-gray-500 dark:text-gray-400">View Profile</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
+                      {isAdmin ? 'Admin' : 'View Profile'}
+                    </div>
                   </div>
                 </Link>
                 <UserButton 
@@ -134,10 +145,13 @@ const Navbar = () => {
                         location.pathname === item.path
                           ? 'text-white bg-gradient-to-r from-[#007acc] to-[#00bfa6] shadow-xl'
                           : 'text-gray-700 dark:text-gray-300 hover:text-white hover:bg-gradient-to-r hover:from-[#007acc] hover:to-[#00bfa6] hover:shadow-lg'
-                      }`}
+                      } ${item.name === 'Admin' ? 'border border-orange-300 dark:border-orange-600' : ''}`}
                     >
                       <item.icon className="w-5 h-5" />
-                      <span>{item.name}</span>
+                      <span className="flex items-center">
+                        {item.name}
+                        {item.name === 'Admin' && <Shield className="w-4 h-4 ml-2" />}
+                      </span>
                     </Link>
                   ))}
                   
@@ -167,7 +181,7 @@ const Navbar = () => {
                             {user?.fullName || user?.emailAddresses[0]?.emailAddress}
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
-                            View Profile
+                            {isAdmin ? 'Admin User' : 'View Profile'}
                           </div>
                         </div>
                       </Link>
