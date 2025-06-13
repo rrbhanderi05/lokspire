@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -17,14 +17,23 @@ const BusinessPost = () => {
   const [userRating, setUserRating] = useState(0);
   const [copied, setCopied] = useState(false);
   const [ratings, setRatings] = useState([
-    { id: 1, user: "Anjali Patel", rating: 5, date: "2024-01-15" },
-    { id: 2, user: "Raj Shah", rating: 4, date: "2024-01-10" },
-    { id: 3, user: "Priya Mehta", rating: 5, date: "2024-01-08" },
-    { id: 4, user: "Kiran Modi", rating: 4, date: "2024-01-05" },
-    { id: 5, user: "Dhruv Joshi", rating: 5, date: "2024-01-02" }
+    { id: 1, user: "Anjali Patel", rating: 5, date: "2024-01-15", userId: "user1" },
+    { id: 2, user: "Raj Shah", rating: 4, date: "2024-01-10", userId: "user2" },
+    { id: 3, user: "Priya Mehta", rating: 5, date: "2024-01-08", userId: "user3" },
+    { id: 4, user: "Kiran Modi", rating: 4, date: "2024-01-05", userId: "user4" },
+    { id: 5, user: "Dhruv Joshi", rating: 5, date: "2024-01-02", userId: "user5" }
   ]);
+  const [hasUserRated, setHasUserRated] = useState(false);
 
   const business = featuredBusinesses.find(b => b.id === parseInt(id || ''));
+
+  // Check if current user has already rated this business
+  useEffect(() => {
+    if (user) {
+      const userHasRated = ratings.some(rating => rating.userId === user.id);
+      setHasUserRated(userHasRated);
+    }
+  }, [user, ratings]);
 
   if (!business) {
     return (
@@ -59,15 +68,26 @@ const BusinessPost = () => {
       return;
     }
 
+    if (hasUserRated) {
+      toast({
+        title: "Already rated",
+        description: "You have already rated this business. Each user can only rate once.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     if (userRating > 0) {
       const newRating = {
         id: ratings.length + 1,
         user: user.fullName || user.emailAddresses[0]?.emailAddress || "User",
         rating: userRating,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        userId: user.id
       };
       setRatings([newRating, ...ratings]);
       setUserRating(0);
+      setHasUserRated(true);
       toast({
         title: "Rating added!",
         description: "Your rating has been submitted successfully."
@@ -205,6 +225,11 @@ const BusinessPost = () => {
                           Sign in to Rate
                         </Button>
                       </SignInButton>
+                    </div>
+                  ) : hasUserRated ? (
+                    <div className="text-center py-8 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-xl">
+                      <p className="text-green-700 dark:text-green-400 mb-2 font-medium">✓ You have already rated this business</p>
+                      <p className="text-green-600 dark:text-green-500 text-sm">Thank you for your feedback!</p>
                     </div>
                   ) : (
                     <>

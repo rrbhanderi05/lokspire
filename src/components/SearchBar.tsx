@@ -1,11 +1,25 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Search, MapPin, Tag, TrendingUp } from 'lucide-react';
-import { featuredBusinesses, businessCategories } from '@/data/businessData';
+import { featuredBusinesses } from '@/data/businessData';
+
+const businessCategories = [
+  'All Categories',
+  'Clothes & Fashion',
+  'Imitation Jewelry',
+  'Homemade Snacks & Sweets',
+  'Tiffin / Dabba Services',
+  'Beauty & Skincare Products',
+  'Handicrafts & Decorative Items',
+  'Gift & Handmade Items',
+  'Stationery / Printed Items',
+  'Stitching / Tailoring',
+  'Baby Care Products',
+  'Jobs'
+];
 
 const areas = [
   'All Areas',
@@ -74,11 +88,11 @@ const SearchBar = () => {
 
     // Add categories
     businessCategories.forEach(category => {
-      if (category.name.toLowerCase().includes(term.toLowerCase())) {
+      if (category !== 'All Categories' && category.toLowerCase().includes(term.toLowerCase())) {
         suggestions.push({
-          text: category.name,
+          text: category,
           type: 'category',
-          icon: category.icon
+          icon: '🏷️'
         });
       }
     });
@@ -157,7 +171,7 @@ const SearchBar = () => {
   };
 
   const filteredCategories = businessCategories.filter(category =>
-    category.name.toLowerCase().includes(categorySearch.toLowerCase())
+    category.toLowerCase().includes(categorySearch.toLowerCase())
   );
 
   const filteredAreas = areas.filter(area =>
@@ -262,12 +276,9 @@ const SearchBar = () => {
                     className="h-8 text-sm"
                   />
                 </div>
-                <SelectItem value="All Categories" className="text-gray-700 dark:text-gray-300">
-                  All Categories
-                </SelectItem>
                 {filteredCategories.map((category) => (
-                  <SelectItem key={category.id} value={category.name} className="text-gray-700 dark:text-gray-300">
-                    {category.icon} {category.name}
+                  <SelectItem key={category} value={category} className="text-gray-700 dark:text-gray-300">
+                    {category}
                   </SelectItem>
                 ))}
               </SelectContent>
