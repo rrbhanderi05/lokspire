@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
@@ -8,13 +7,13 @@ import { Button } from '@/components/ui/button';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import { ArrowLeft, MapPin, Phone, Star, Share2, User, Copy, Check } from 'lucide-react';
 import { featuredBusinesses } from '@/data/businessData';
-import { useAuth } from '@/contexts/AuthContext';
+import { useUser, SignInButton } from '@clerk/clerk-react';
 import { toast } from '@/hooks/use-toast';
 
 const BusinessPost = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user, signInWithGoogle } = useAuth();
+  const { user } = useUser();
   const [userRating, setUserRating] = useState(0);
   const [copied, setCopied] = useState(false);
   const [ratings, setRatings] = useState([
@@ -63,7 +62,7 @@ const BusinessPost = () => {
     if (userRating > 0) {
       const newRating = {
         id: ratings.length + 1,
-        user: user.displayName || "User",
+        user: user.fullName || user.emailAddresses[0]?.emailAddress || "User",
         rating: userRating,
         date: new Date().toISOString().split('T')[0]
       };
@@ -201,9 +200,11 @@ const BusinessPost = () => {
                   {!user ? (
                     <div className="text-center py-8 bg-gradient-to-r from-gray-50 to-blue-50 dark:from-gray-700 dark:to-gray-600 rounded-xl">
                       <p className="text-gray-600 dark:text-gray-300 mb-4">Sign in to rate this business</p>
-                      <Button onClick={signInWithGoogle} className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl">
-                        Sign in with Google
-                      </Button>
+                      <SignInButton mode="modal">
+                        <Button className="bg-gradient-to-r from-[#007acc] to-[#00bfa6] hover:from-[#005f73] hover:to-[#007acc] shadow-xl">
+                          Sign in to Rate
+                        </Button>
+                      </SignInButton>
                     </div>
                   ) : (
                     <>

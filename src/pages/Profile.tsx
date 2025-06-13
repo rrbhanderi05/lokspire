@@ -1,16 +1,15 @@
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import UserProfile from '@/components/UserProfile';
-import { useWorkOS } from '@/contexts/WorkOSContext';
+import { useUser } from '@clerk/clerk-react';
 import { Loader2 } from 'lucide-react';
 
 const Profile = () => {
-  const { user, loading } = useWorkOS();
+  const { user, isLoaded } = useUser();
 
-  if (loading) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
