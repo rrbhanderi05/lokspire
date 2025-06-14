@@ -123,7 +123,7 @@ const Footer = () => {
             <p className="text-gray-400 text-xs text-center md:text-right">
               Made and Operated by{' '}
               <a 
-                href="shravytech.vercel.app" 
+                href="https://shravytech.vercel.app/" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="text-[#00bfa6] hover:text-white transition-colors font-semibold"
